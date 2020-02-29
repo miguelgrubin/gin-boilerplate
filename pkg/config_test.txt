@@ -1,0 +1,5 @@
+Test ReadConfig
+	Given an existing enviroment
+		It should retrieve their config
+	Given an unexistent enviroment
+		It should retrieve a default config

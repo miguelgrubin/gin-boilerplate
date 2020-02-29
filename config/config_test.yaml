@@ -1,0 +1,8 @@
+server:
+  address: "0.0.0.0:9090"
+  https: false
+database:
+  driver: "sqlite3"
+  address: "db_test.db"
+testing: true
+debug: true
