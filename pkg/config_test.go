@@ -1,6 +1,7 @@
 package pkg
 
 import (
+	"log"
 	"os"
 	"reflect"
 	"testing"
@@ -58,7 +59,10 @@ func TestReadConfig(t *testing.T) {
 		tmp_path := "config/config_tmp.yaml"
 		os.Setenv("APP_ENV", "local")
 		if fileExists(local_path) {
-			os.Rename(local_path, tmp_path)
+			err := os.Rename(local_path, tmp_path)
+			if err != nil {
+				log.Fatal(err)
+			}
 		}
 
 		Convey("It should retrieve an error", func() {
@@ -69,7 +73,10 @@ func TestReadConfig(t *testing.T) {
 		})
 
 		if fileExists(tmp_path) {
-			os.Rename(tmp_path, local_path)
+			err := os.Rename(tmp_path, local_path)
+			if err != nil {
+				log.Fatal(err)
+			}
 		}
 		os.Setenv("APP_ENV", "test")
 	})
