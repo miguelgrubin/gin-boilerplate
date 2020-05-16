@@ -7,20 +7,20 @@ import (
 )
 
 type ServerConfig struct {
-	address string
-	https   bool
+	Address string
+	Https   bool
 }
 
 type DatabaseConfig struct {
-	driver  string
-	address string
+	Driver  string
+	Address string
 }
 
 type AppConfig struct {
-	server   ServerConfig
-	database DatabaseConfig
-	debug    bool
-	testing  bool
+	Server   ServerConfig
+	Database DatabaseConfig
+	Debug    bool
+	Testing  bool
 }
 
 // @TODO add redis config
@@ -54,6 +54,7 @@ func defaultConfig() {
 	viper.SetDefault("testing", false)
 }
 
+// ReadConfig from ./config/config.yaml or ./config/config_{{enviroment}}.yaml
 func ReadConfig() (AppConfig, error) {
 	defaultConfig()
 	err := viper.ReadInConfig()
@@ -61,16 +62,16 @@ func ReadConfig() (AppConfig, error) {
 		return AppConfig{}, err
 	}
 	config := AppConfig{
-		server: ServerConfig{
-			address: viper.GetString("server.address"),
-			https:   viper.GetBool("server.https"),
+		Server: ServerConfig{
+			Address: viper.GetString("server.address"),
+			Https:   viper.GetBool("server.https"),
 		},
-		database: DatabaseConfig{
-			driver:  viper.GetString("database.driver"),
-			address: viper.GetString("database.address"),
+		Database: DatabaseConfig{
+			Driver:  viper.GetString("database.driver"),
+			Address: viper.GetString("database.address"),
 		},
-		testing: viper.GetBool("testing"),
-		debug:   viper.GetBool("debug"),
+		Testing: viper.GetBool("testing"),
+		Debug:   viper.GetBool("debug"),
 	}
 	return config, nil
 }

@@ -19,19 +19,19 @@ func TestReadConfig(t *testing.T) {
 				t.Log(err.Error())
 				t.Fatal("Config could not be readed")
 			}
-			if !config.testing {
+			if !config.Testing {
 				t.Fatal("Config testing could not be readed")
 			}
 		})
 		Convey("It should have a server config", func() {
-			gotType := reflect.TypeOf(config.server).String()
+			gotType := reflect.TypeOf(config.Server).String()
 			wantType := "pkg.ServerConfig"
 			if gotType != wantType {
 				t.Fatalf("Invalid type: got %v, want %v", gotType, wantType)
 			}
 		})
 		Convey("It should have a database config", func() {
-			gotType := reflect.TypeOf(config.database).String()
+			gotType := reflect.TypeOf(config.Database).String()
 			wantType := "pkg.DatabaseConfig"
 			if gotType != wantType {
 				t.Fatalf("Invalid type: got %v, want %v", gotType, wantType)
@@ -47,7 +47,7 @@ func TestReadConfig(t *testing.T) {
 				t.Log(err.Error())
 				t.Fatal("Config could not be readed")
 			}
-			if config.testing {
+			if config.Testing {
 				t.Fatal("Config testing could not be readed")
 			}
 		})
