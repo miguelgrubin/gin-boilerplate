@@ -1,6 +1,7 @@
 package pkg
 
 import (
+	"log"
 	"os"
 	"reflect"
 	"testing"
@@ -18,19 +19,19 @@ func TestReadConfig(t *testing.T) {
 				t.Log(err.Error())
 				t.Fatal("Config could not be readed")
 			}
-			if !config.testing {
+			if !config.Testing {
 				t.Fatal("Config testing could not be readed")
 			}
 		})
 		Convey("It should have a server config", func() {
-			gotType := reflect.TypeOf(config.server).String()
+			gotType := reflect.TypeOf(config.Server).String()
 			wantType := "pkg.ServerConfig"
 			if gotType != wantType {
 				t.Fatalf("Invalid type: got %v, want %v", gotType, wantType)
 			}
 		})
 		Convey("It should have a database config", func() {
-			gotType := reflect.TypeOf(config.database).String()
+			gotType := reflect.TypeOf(config.Database).String()
 			wantType := "pkg.DatabaseConfig"
 			if gotType != wantType {
 				t.Fatalf("Invalid type: got %v, want %v", gotType, wantType)
@@ -46,7 +47,7 @@ func TestReadConfig(t *testing.T) {
 				t.Log(err.Error())
 				t.Fatal("Config could not be readed")
 			}
-			if config.testing {
+			if config.Testing {
 				t.Fatal("Config testing could not be readed")
 			}
 		})
@@ -58,7 +59,10 @@ func TestReadConfig(t *testing.T) {
 		tmp_path := "config/config_tmp.yaml"
 		os.Setenv("APP_ENV", "local")
 		if fileExists(local_path) {
-			os.Rename(local_path, tmp_path)
+			err := os.Rename(local_path, tmp_path)
+			if err != nil {
+				log.Fatal(err)
+			}
 		}
 
 		Convey("It should retrieve an error", func() {
@@ -69,7 +73,10 @@ func TestReadConfig(t *testing.T) {
 		})
 
 		if fileExists(tmp_path) {
-			os.Rename(tmp_path, local_path)
+			err := os.Rename(tmp_path, local_path)
+			if err != nil {
+				log.Fatal(err)
+			}
 		}
 		os.Setenv("APP_ENV", "test")
 	})

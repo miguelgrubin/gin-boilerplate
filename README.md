@@ -1,26 +1,27 @@
 # Gin Boilerplate
 
-This repository contains basic implementation of:
-- View <-> Service <-> Repository (three tier architecture)
-- Swagger documentation
-- ORM
-- DB Migrations
+This repository contains a golang API using DDD architecture, with BDD development process and a API First approach.
 
 
-Using:
-- [Gin Framework](https://github.com/gin-gonic/gin)
-- [Testify](https://github.com/stretchr/testify)
-- [GORM](https://github.com/jinzhu/gorm)
-- [Migrate](https://github.com/golang-migrate/migrate)
-- [Cobra](https://github.com/spf13/cobra)
-- [Viper](https://github.com/spf13/viper)
+## Features
+- Behavior-Driven Development (BDD) using GoConvey + Testify
+- Domain-Driven Design (DDD) based on [this dev.to article]():
+- Swagger documentation (Api First approach)
 
 
-Basic endpoints:
+## Toolkit
+- [Gin Gonic](https://github.com/gin-gonic/gin) Web framework
+- [Testify](https://github.com/stretchr/testify) Assert + Mocks
+- [GoConvey](https://github.com/smartystreets/goconvey) BDD testing framework
+- [GORM](https://github.com/jinzhu/gorm) SQL ORM
+- [Cobra](https://github.com/spf13/cobra) Command line framework
+- [Viper](https://github.com/spf13/viper) Config files toolkit
+
+
+## Endpoints
 | Method | URL                        |
 | ------ |:-------------------------- |
-| GET    | /docs                      |
-| GET    | /swagger.json              |
+| GET    | /swagger.yaml              |
 | GET    | /health                    |
 | GET    | /v1/pets                   |
 | POST   | /v1/pets                   |
@@ -41,17 +42,12 @@ Basic endpoints:
 | POST   | /v1/store/confirm-order    |
 
 
-Basic cli commands:
+## CLI Usage
 - app
 - app serve
+- app automigrate
 - app migrate
 - app seed
-- app config create
+- app create config
 
 
-Desired integrates:
-- Docker
-- Docker Compose
-- Kubernetes
-- Prometheus
-- confd -> etcd

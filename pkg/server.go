@@ -1,6 +1,8 @@
 package pkg
 
 import (
+	"log"
+
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 )
@@ -15,5 +17,8 @@ func setupRouter() *gin.Engine {
 
 func RunServer() {
 	r := setupRouter()
-	r.Run(viper.GetString("server.address"))
+	err := r.Run(viper.GetString("server.address"))
+	if err != nil {
+		log.Print(err)
+	}
 }
