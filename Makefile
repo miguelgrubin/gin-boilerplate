@@ -1,15 +1,18 @@
 .PHONY: help
-help:
-	echo "Help"
-install:
+help:                         ## Show this help.
+	@echo "\tMakefile commnads list\n"
+	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
+install:                      ## Install dependencies with go mod
 	go mod vendor
-compile:
+compile:                      ## Compile App
 	go build -o bin/app -race
-clean:
-	rm -f bin/app
-run: clean compile
-	./bin/app
-test:
+clean:                        ## Delete build and configs
+	rm -f bin/*
+build: clean compile          ## Clean & Compile
+run: build
+	cd bin && ./app create config
+	cd bin && ./app serve
+test:                         ## Run all tests
 	go test ./...
-test-server:
+test-server:                  ## Start testing server
 	goconvey
