@@ -8,7 +8,7 @@ import (
 
 type ServerConfig struct {
 	Address string
-	Https   bool
+	HTTPS   bool
 }
 
 type DatabaseConfig struct {
@@ -43,7 +43,7 @@ func defaultConfig() {
 		srcName = srcName + "_" + os.Getenv("APP_ENV")
 	}
 	viper.SetConfigName(srcName)
-	viper.AddConfigPath("../config")
+	viper.AddConfigPath(".")
 	viper.SetConfigType("yaml")
 
 	viper.SetDefault("server.address", "0.0.0.0:8080")
@@ -54,7 +54,7 @@ func defaultConfig() {
 	viper.SetDefault("testing", false)
 }
 
-// ReadConfig from ./config/config.yaml or ./config/config_{{enviroment}}.yaml
+// ReadConfig from ./config.yaml or ./config_{{enviroment}}.yaml
 func ReadConfig() (AppConfig, error) {
 	defaultConfig()
 	err := viper.ReadInConfig()
@@ -64,7 +64,7 @@ func ReadConfig() (AppConfig, error) {
 	config := AppConfig{
 		Server: ServerConfig{
 			Address: viper.GetString("server.address"),
-			Https:   viper.GetBool("server.https"),
+			HTTPS:   viper.GetBool("server.https"),
 		},
 		Database: DatabaseConfig{
 			Driver:  viper.GetString("database.driver"),
@@ -74,4 +74,10 @@ func ReadConfig() (AppConfig, error) {
 		Debug:   viper.GetBool("debug"),
 	}
 	return config, nil
+}
+
+// WriteConfig to ./config.yaml or ./config_{{environment}}.yaml
+func WriteConfig() error {
+	defaultConfig()
+	return viper.SafeWriteConfig()
 }
