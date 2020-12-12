@@ -16,6 +16,7 @@ func setupRouter() *gin.Engine {
 }
 
 func RunServer() {
+	ReadConfig()
 	r := setupRouter()
 	err := r.Run(viper.GetString("server.address"))
 	if err != nil {

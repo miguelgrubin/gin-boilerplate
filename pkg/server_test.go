@@ -27,9 +27,4 @@ func TestServer(t *testing.T) {
 			assert.Equal(t, "Health check", w.Body.String())
 		})
 	})
-
-	Convey("Test RunServer", t, func() {
-		gin.SetMode(gin.TestMode)
-		go RunServer()
-	})
 }
