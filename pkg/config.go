@@ -23,9 +23,6 @@ type AppConfig struct {
 	Testing  bool
 }
 
-// @TODO add redis config
-// @TODO DDD https://dev.to/stevensunflash/using-domain-driven-design-ddd-in-golang-3ee5
-
 func isValidEnviroment(env string) bool {
 	switch env {
 	case
@@ -54,14 +51,8 @@ func defaultConfig() {
 	viper.SetDefault("testing", false)
 }
 
-// ReadConfig from ./config.yaml or ./config_{{enviroment}}.yaml
-func ReadConfig() (AppConfig, error) {
-	defaultConfig()
-	err := viper.ReadInConfig()
-	if err != nil {
-		return AppConfig{}, err
-	}
-	config := AppConfig{
+func configFactory() AppConfig {
+	return AppConfig{
 		Server: ServerConfig{
 			Address: viper.GetString("server.address"),
 			HTTPS:   viper.GetBool("server.https"),
@@ -73,7 +64,16 @@ func ReadConfig() (AppConfig, error) {
 		Testing: viper.GetBool("testing"),
 		Debug:   viper.GetBool("debug"),
 	}
-	return config, nil
+}
+
+// ReadConfig from ./config.yaml or ./config_{{enviroment}}.yaml
+func ReadConfig() (AppConfig, error) {
+	defaultConfig()
+	err := viper.ReadInConfig()
+	if err != nil {
+		return configFactory(), err
+	}
+	return configFactory(), nil
 }
 
 // WriteConfig to ./config.yaml or ./config_{{environment}}.yaml

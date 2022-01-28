@@ -22,3 +22,5 @@ vendor/
 
 # Binaries generated on compile
 bin/
+
+.vscode/

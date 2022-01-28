@@ -1,0 +1,19 @@
+mode: count
+github.com/miguelgrubin/gin-boilerplate/pkg/config.go:29.41,30.13 1 5
+github.com/miguelgrubin/gin-boilerplate/pkg/config.go:37.2,37.14 1 1
+github.com/miguelgrubin/gin-boilerplate/pkg/config.go:34.9,35.14 1 4
+github.com/miguelgrubin/gin-boilerplate/pkg/config.go:40.22,42.45 2 5
+github.com/miguelgrubin/gin-boilerplate/pkg/config.go:45.2,54.36 9 5
+github.com/miguelgrubin/gin-boilerplate/pkg/config.go:42.45,44.3 1 4
+github.com/miguelgrubin/gin-boilerplate/pkg/config.go:57.32,70.2 1 5
+github.com/miguelgrubin/gin-boilerplate/pkg/config.go:73.38,76.16 3 5
+github.com/miguelgrubin/gin-boilerplate/pkg/config.go:79.2,79.29 1 4
+github.com/miguelgrubin/gin-boilerplate/pkg/config.go:76.16,78.3 1 1
+github.com/miguelgrubin/gin-boilerplate/pkg/config.go:83.26,86.2 2 0
+github.com/miguelgrubin/gin-boilerplate/pkg/server.go:10.32,12.40 2 1
+github.com/miguelgrubin/gin-boilerplate/pkg/server.go:15.2,15.10 1 1
+github.com/miguelgrubin/gin-boilerplate/pkg/server.go:12.40,14.3 1 1
+github.com/miguelgrubin/gin-boilerplate/pkg/server.go:18.18,20.16 2 0
+github.com/miguelgrubin/gin-boilerplate/pkg/server.go:23.2,25.16 3 0
+github.com/miguelgrubin/gin-boilerplate/pkg/server.go:20.16,22.3 1 0
+github.com/miguelgrubin/gin-boilerplate/pkg/server.go:25.16,27.3 1 0

@@ -1,14 +1,13 @@
-package persistence
+package repositories
 
 import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/domain/entity"
-	"github.com/miguelgrubin/gin-boilerplate/pkg/domain/repository"
 )
 
 type Repositories struct {
-	Pet repository.PetRepository
+	Pet PetRepository
 	db  *gorm.DB
 }
 

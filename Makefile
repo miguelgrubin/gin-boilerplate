@@ -12,6 +12,8 @@ build: clean compile          ## Clean & Compile
 run: build
 	cd bin && ./app create config
 	cd bin && ./app serve
+lint:                         ## Show lint errors
+	golangci-lint run
 test:                         ## Run all tests
 	go test ./...
 test-server:                  ## Start testing server
