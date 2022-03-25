@@ -10,7 +10,7 @@ clean:                        ## Delete build and configs
 	rm -f bin/*
 build: clean compile          ## Clean & Compile
 run: build
-	cd bin && ./app create config
+	cd bin && ./app create-config
 	cd bin && ./app serve
 lint:                         ## Show lint errors
 	golangci-lint run
