@@ -1,0 +1,6 @@
+quiet: False
+all: True
+keeptree: False
+case: "underscore"
+dir: "./pkg"
+output: "./pkg/mocks"

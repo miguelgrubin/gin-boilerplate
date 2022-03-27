@@ -10,6 +10,11 @@ import (
 )
 
 func TestReadConfig(t *testing.T) {
+	err := os.Chdir("../test")
+	if err != nil {
+		t.Log(err.Error())
+		t.Fatal("Can not change pwd to /test dir")
+	}
 
 	Convey("Given existing enviroment", t, func() {
 		os.Setenv("APP_ENV", "test")
@@ -55,11 +60,11 @@ func TestReadConfig(t *testing.T) {
 	})
 
 	Convey("Given enviroment with unexistent config file", t, func() {
-		local_path := "config/config_local.yaml"
-		tmp_path := "config/config_tmp.yaml"
+		localPath := "config/config_local.yaml"
+		tmpPath := "config/config_tmp.yaml"
 		os.Setenv("APP_ENV", "local")
-		if fileExists(local_path) {
-			err := os.Rename(local_path, tmp_path)
+		if fileExists(localPath) {
+			err := os.Rename(localPath, tmpPath)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -72,8 +77,8 @@ func TestReadConfig(t *testing.T) {
 			}
 		})
 
-		if fileExists(tmp_path) {
-			err := os.Rename(tmp_path, local_path)
+		if fileExists(tmpPath) {
+			err := os.Rename(tmpPath, localPath)
 			if err != nil {
 				log.Fatal(err)
 			}

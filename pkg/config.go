@@ -8,7 +8,7 @@ import (
 
 type ServerConfig struct {
 	Address string
-	Https   bool
+	HTTPS   bool
 }
 
 type DatabaseConfig struct {
@@ -22,9 +22,6 @@ type AppConfig struct {
 	Debug    bool
 	Testing  bool
 }
-
-// @TODO add redis config
-// @TODO DDD https://dev.to/stevensunflash/using-domain-driven-design-ddd-in-golang-3ee5
 
 func isValidEnviroment(env string) bool {
 	switch env {
@@ -43,7 +40,7 @@ func defaultConfig() {
 		srcName = srcName + "_" + os.Getenv("APP_ENV")
 	}
 	viper.SetConfigName(srcName)
-	viper.AddConfigPath("../config")
+	viper.AddConfigPath(".")
 	viper.SetConfigType("yaml")
 
 	viper.SetDefault("server.address", "0.0.0.0:8080")
@@ -54,17 +51,11 @@ func defaultConfig() {
 	viper.SetDefault("testing", false)
 }
 
-// ReadConfig from ./config/config.yaml or ./config/config_{{enviroment}}.yaml
-func ReadConfig() (AppConfig, error) {
-	defaultConfig()
-	err := viper.ReadInConfig()
-	if err != nil {
-		return AppConfig{}, err
-	}
-	config := AppConfig{
+func configFactory() AppConfig {
+	return AppConfig{
 		Server: ServerConfig{
 			Address: viper.GetString("server.address"),
-			Https:   viper.GetBool("server.https"),
+			HTTPS:   viper.GetBool("server.https"),
 		},
 		Database: DatabaseConfig{
 			Driver:  viper.GetString("database.driver"),
@@ -73,5 +64,20 @@ func ReadConfig() (AppConfig, error) {
 		Testing: viper.GetBool("testing"),
 		Debug:   viper.GetBool("debug"),
 	}
-	return config, nil
+}
+
+// ReadConfig from ./config.yaml or ./config_{{enviroment}}.yaml
+func ReadConfig() (AppConfig, error) {
+	defaultConfig()
+	err := viper.ReadInConfig()
+	if err != nil {
+		return configFactory(), err
+	}
+	return configFactory(), nil
+}
+
+// WriteConfig to ./config.yaml or ./config_{{environment}}.yaml
+func WriteConfig() error {
+	defaultConfig()
+	return viper.SafeWriteConfig()
 }

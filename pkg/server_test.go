@@ -12,6 +12,11 @@ import (
 )
 
 func TestServer(t *testing.T) {
+	err := os.Chdir("../test")
+	if err != nil {
+		t.Log(err.Error())
+		t.Fatal("Can not change pwd to /test dir")
+	}
 
 	Convey("Given a server instance", t, func() {
 		gin.SetMode(gin.TestMode)
@@ -26,10 +31,5 @@ func TestServer(t *testing.T) {
 			assert.Equal(t, 200, w.Code)
 			assert.Equal(t, "Health check", w.Body.String())
 		})
-	})
-
-	Convey("Test RunServer", t, func() {
-		gin.SetMode(gin.TestMode)
-		go RunServer()
 	})
 }

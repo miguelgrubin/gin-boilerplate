@@ -45,7 +45,6 @@ This repository contains a golang API using DDD architecture, with BDD developme
 ## CLI Usage
 - app
 - app serve
-- app automigrate
 - app migrate
 - app seed
 - app create config
