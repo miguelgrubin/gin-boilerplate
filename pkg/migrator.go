@@ -1,16 +1,18 @@
 package pkg
 
 import (
+	"log"
+
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/shared/infrastructure"
-	"github.com/spf13/viper"
 )
 
 func MigrateAll() {
-	ReadConfig()
-	db := infrastructure.NewDbConnection(
-		viper.GetString("database.driver"),
-		viper.GetString("database.address"),
-	)
+	config, err := ReadConfig()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	db := infrastructure.NewDbConnection(config.Database.Driver, config.Database.Address)
 	petshop.NewPetShopMigrator(db)
 }
