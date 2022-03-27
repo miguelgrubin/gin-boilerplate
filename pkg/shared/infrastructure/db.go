@@ -1,17 +1,19 @@
 package infrastructure
 
 import (
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
-func NewDbConnection(Dbdriver, DBURL string) (*gorm.DB, error) {
-	db, err := gorm.Open(Dbdriver, DBURL)
-	if err != nil {
-		return nil, err
+func NewDbConnection(Dbdriver, DBURL string) *gorm.DB {
+	var db *gorm.DB
+	if Dbdriver == "sqlite3" {
+		var err error
+		db, err = gorm.Open(sqlite.Open(DBURL), &gorm.Config{})
+		if err != nil {
+			panic("failed to connect database")
+		}
 	}
-	defer db.Close()
-	db.LogMode(true)
 
-	return db, nil
+	return db
 }

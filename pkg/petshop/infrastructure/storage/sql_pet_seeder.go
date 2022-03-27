@@ -1,8 +1,8 @@
 package storage
 
 import (
-	"github.com/jinzhu/gorm"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/domain"
+	"gorm.io/gorm"
 )
 
 func SeedPet(db *gorm.DB) (*domain.Pet, error) {

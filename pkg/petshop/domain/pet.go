@@ -8,12 +8,12 @@ import (
 )
 
 type Pet struct {
-	ID        shared.EntityId  `gorm:"primary_key;" json:"id"`
-	Name      string           `gorm:"size:100;not null;" json:"name"`
-	Status    string           `gorm:"size:100;not null;" json:"status"`
-	CreatedAt shared.DateTime  `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
-	UpdatedAt shared.DateTime  `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
-	DeletedAt *shared.DateTime `json:"deleted_at,omitempty"`
+	ID        shared.EntityId
+	Name      string
+	Status    string
+	CreatedAt shared.DateTime
+	UpdatedAt shared.DateTime
+	DeletedAt *shared.DateTime
 }
 
 type CreatePetParams struct {

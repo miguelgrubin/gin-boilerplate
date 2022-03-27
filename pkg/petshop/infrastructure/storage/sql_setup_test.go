@@ -5,10 +5,9 @@ import (
 	"os"
 
 	"github.com/miguelgrubin/gin-boilerplate/pkg"
-	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/domain"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/infrastructure/storage"
-
-	"github.com/jinzhu/gorm"
+	"github.com/miguelgrubin/gin-boilerplate/pkg/shared/infrastructure"
+	"gorm.io/gorm"
 )
 
 func DBConn() (*gorm.DB, error) {
@@ -19,28 +18,24 @@ func LocalDatabase() (*gorm.DB, error) {
 	err := os.Chdir("../../../../test")
 	if err != nil {
 		log.Println("Can not load test config file")
+		return nil, err
 	}
+
 	appConfig, err := pkg.ReadConfig()
 	if err != nil {
 		return nil, err
-	} else {
-		log.Println("APP CONFIG READED")
 	}
 
-	conn, err := gorm.Open(appConfig.Database.Driver, appConfig.Database.Driver)
+	db := infrastructure.NewDbConnection(appConfig.Database.Driver, appConfig.Database.Address)
+
+	err = db.Migrator().DropTable(&storage.PetSQLEntity{})
 	if err != nil {
 		return nil, err
-	} else {
-		log.Println("CONNECTED TO: ", appConfig.Database.Driver)
 	}
 
-	err = conn.DropTableIfExists(&domain.Pet{}).Error
+	err = storage.Automigrate(db)
 	if err != nil {
 		return nil, err
 	}
-	err = storage.Automigrate(conn)
-	if err != nil {
-		return nil, err
-	}
-	return conn, nil
+	return db, nil
 }

@@ -7,11 +7,6 @@ import (
 )
 
 func NewRouterGroup(v1 *gin.RouterGroup, useCases application.PetUseCasesInterface) {
-	v1.GET("/pets", func(c *gin.Context) {
-		pets, _ := useCases.Finder(application.PetFinderParams{})
-		c.JSON(200, pets)
-	})
-
 	v1.POST("/pets", func(c *gin.Context) {
 		pet, _ := useCases.Creator(application.PetCreatorParams{
 			Name:   c.PostForm("name"),
@@ -20,10 +15,19 @@ func NewRouterGroup(v1 *gin.RouterGroup, useCases application.PetUseCasesInterfa
 		c.JSON(201, pet)
 	})
 
+	v1.GET("/pets", func(c *gin.Context) {
+		pets, _ := useCases.Finder(application.PetFinderParams{})
+		c.JSON(200, pets)
+	})
+
 	v1.GET("/pet/:id", func(c *gin.Context) {
 		petId := shared.EntityId(c.Param("id"))
-		pet, _ := useCases.Showher(petId)
-		c.JSON(200, pet)
+		pet, err := useCases.Showher(petId)
+		if err != nil {
+			c.JSON(404, err.Error())
+			return
+		}
+		c.JSON(200, PetReponseFromDomain(pet))
 	})
 
 	v1.PATCH("/pet/:id", func(c *gin.Context) {
@@ -33,12 +37,23 @@ func NewRouterGroup(v1 *gin.RouterGroup, useCases application.PetUseCasesInterfa
 			Name:   c.PostForm("name"),
 			Status: c.PostForm("status"),
 		}
-		pet, _ := useCases.Updater(petId, payload)
-		c.JSON(204, pet)
+		pet, err := useCases.Updater(petId, payload)
+
+		if err != nil {
+			c.JSON(404, err.Error())
+			return
+		}
+		c.JSON(200, PetReponseFromDomain(pet))
 	})
 
 	v1.DELETE("/pet/:id", func(c *gin.Context) {
 		petId := shared.EntityId(c.Param("id"))
-		useCases.Deleter(petId)
+		err := useCases.Deleter(petId)
+
+		if err != nil {
+			c.JSON(404, err.Error())
+			return
+		}
+		c.JSON(204, nil)
 	})
 }

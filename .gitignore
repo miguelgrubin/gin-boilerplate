@@ -24,3 +24,10 @@ vendor/
 bin/
 
 .vscode/
+
+coverage
+coverage.out
+coverage.html
+
+database.db
+test/database.db

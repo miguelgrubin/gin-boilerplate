@@ -22,7 +22,9 @@ func RunServer() {
 }
 
 func setupRouter() *gin.Engine {
-	r := gin.Default()
+	r := gin.New()
+	r.Use(gin.Logger())
+	r.Use(gin.Recovery())
 	r.GET("/health", func(c *gin.Context) {
 		c.String(200, "Health check")
 	})
@@ -32,12 +34,9 @@ func setupRouter() *gin.Engine {
 }
 
 func NewServices(r *gin.RouterGroup) {
-	db, err := infrastructure.NewDbConnection(
+	db := infrastructure.NewDbConnection(
 		viper.GetString("database.driver"),
 		viper.GetString("database.address"),
 	)
-	if err != nil {
-		log.Print(err)
-	}
 	petshop.NewPetShopServer(db, r)
 }
