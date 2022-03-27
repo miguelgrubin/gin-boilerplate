@@ -18,7 +18,10 @@ type PetCreatorParams struct {
 
 type PetFinderParams PetCreatorParams
 
-type PetUpdatersParams PetCreatorParams
+type PetUpdatersParams struct {
+	Name   *string
+	Status *string
+}
 
 type PetUseCasesInterface interface {
 	Creator(PetCreatorParams) (domain.Pet, error)
@@ -58,6 +61,7 @@ func (p *PetUseCases) Updater(petId shared.EntityId, payload PetUpdatersParams) 
 	if err != nil {
 		return domain.Pet{}, err
 	}
+	pet.Update(domain.UpdatePetParams(payload))
 
 	err = p.pr.Save(*pet)
 	if err != nil {

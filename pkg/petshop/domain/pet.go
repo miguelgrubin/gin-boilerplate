@@ -3,8 +3,8 @@ package domain
 import (
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/shared"
-	uuid "github.com/satori/go.uuid"
 )
 
 type Pet struct {
@@ -39,7 +39,7 @@ func (p *Pet) Update(payload UpdatePetParams) {
 }
 
 func NewPet(payload CreatePetParams) Pet {
-	id := uuid.NewV4().String()
+	id := uuid.New().String()
 	pet := Pet{
 		ID:        shared.EntityId(id),
 		Name:      payload.Name,

@@ -19,8 +19,19 @@ type PetEntity struct {
 	DeletedAt *time.Time ``
 }
 
+func (pe *PetEntity) TableName() string {
+	return "pets"
+}
+
 func (pe *PetEntity) ToDomain() domain.Pet {
-	return domain.Pet{shared.EntityId(pe.ID), pe.Name, pe.Status, shared.DateTime(pe.CreatedAt), shared.DateTime(pe.UpdatedAt), (*shared.DateTime)(pe.DeletedAt)}
+	return domain.Pet{
+		ID:        shared.EntityId(pe.ID),
+		Name:      pe.Name,
+		Status:    pe.Status,
+		CreatedAt: shared.DateTime(pe.CreatedAt),
+		UpdatedAt: shared.DateTime(pe.UpdatedAt),
+		DeletedAt: (*shared.DateTime)(pe.DeletedAt),
+	}
 }
 
 func PetEntityFromDomain(p domain.Pet) PetEntity {

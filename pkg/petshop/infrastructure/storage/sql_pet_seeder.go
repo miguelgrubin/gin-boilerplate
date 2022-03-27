@@ -5,20 +5,8 @@ import (
 	"gorm.io/gorm"
 )
 
-func SeedPet(db *gorm.DB) (*domain.Pet, error) {
-	pet := domain.NewPet(domain.CreatePetParams{
-		Name:   "Fluffy",
-		Status: "happy",
-	})
-
-	err := db.Create(&pet).Error
-	if err != nil {
-		return nil, err
-	}
-	return &pet, nil
-}
-
 func SeedPets(db *gorm.DB) ([]domain.Pet, error) {
+	pr := NewPetRepository(db)
 	pets := []domain.Pet{
 		domain.NewPet(domain.CreatePetParams{
 			Name:   "Tommy",
@@ -30,7 +18,7 @@ func SeedPets(db *gorm.DB) ([]domain.Pet, error) {
 		}),
 	}
 	for _, v := range pets {
-		err := db.Create(v).Error
+		err := pr.Save(v)
 		if err != nil {
 			return nil, err
 		}

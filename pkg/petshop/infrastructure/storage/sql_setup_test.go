@@ -28,7 +28,7 @@ func LocalDatabase() (*gorm.DB, error) {
 
 	db := infrastructure.NewDbConnection(appConfig.Database.Driver, appConfig.Database.Address)
 
-	err = db.Migrator().DropTable(&storage.PetSQLEntity{})
+	err = db.Migrator().DropTable(&storage.PetEntity{})
 	if err != nil {
 		return nil, err
 	}

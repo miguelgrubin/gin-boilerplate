@@ -1,8 +1,0 @@
-database:
-  address: database.db
-  driver: sqlite3
-debug: false
-server:
-  address: 0.0.0.0:8080
-  https: false
-testing: false
