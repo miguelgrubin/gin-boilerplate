@@ -23,6 +23,9 @@ vendor/
 # Binaries generated on compile
 bin/
 
+# Tmp files
+tmp/
+
 .vscode/
 
 coverage

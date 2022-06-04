@@ -13,10 +13,13 @@ This repository contains a golang API using hexagonal architecture.
 
 - [Gin Gonic](https://github.com/gin-gonic/gin) Web framework
 - [Testify](https://github.com/stretchr/testify) Assert + Mocks
+- [Mockery](https://github.com/vektra/mockery) Generate Mocks
 - [GoConvey](https://github.com/smartystreets/goconvey) BDD testing framework
 - [GORM](https://github.com/jinzhu/gorm) SQL ORM
 - [Cobra](https://github.com/spf13/cobra) Command line framework
 - [Viper](https://github.com/spf13/viper) Config files toolkit
+- [Air](https://github.com/cosmtrek/air) Live Reload
+- [Delve](https://github.com/go-delve/delve) Debug
 
 ## Endpoints
 

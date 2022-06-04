@@ -1,4 +1,8 @@
-.PHONY: help
+.PHONY: help all test test/cover clean
+
+GO=go
+GOCOVER=$(GO) tool cover
+
 help:                         ## Show this help.
 	@echo "\tMakefile commnads list\n"
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
@@ -13,8 +17,14 @@ run: build
 	cd bin && ./app create-config
 	cd bin && ./app serve
 lint:                         ## Show lint errors
-	golangci-lint run
+	go vet ./...
+format:                       ## Apply format to all files
+	gofmt -s -w .
 test:                         ## Run all tests
-	go test ./...
-test-server:                  ## Start testing server
-	goconvey
+	go test ./... -v
+test/cover:                         ## Run all tests
+	$(GOTEST) -v -coverprofile=coverage.out ./...
+	$(GOCOVER) -func=coverage.out
+	$(GOCOVER) -html=coverage.out
+start/dev:
+	air

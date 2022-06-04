@@ -26,7 +26,7 @@ func setupRouter() *gin.Engine {
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
 	r.GET("/health", func(c *gin.Context) {
-		c.String(200, "Health check")
+		c.String(200, "Health check!")
 	})
 	v1 := r.Group("/v1")
 	NewServices(v1)

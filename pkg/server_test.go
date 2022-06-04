@@ -7,29 +7,27 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	. "github.com/smartystreets/goconvey/convey"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestServer(t *testing.T) {
+func createServerFixture(t *testing.T) *gin.Engine {
 	err := os.Chdir("../test")
 	if err != nil {
 		t.Log(err.Error())
 		t.Fatal("Can not change pwd to /test dir")
 	}
+	gin.SetMode(gin.TestMode)
+	os.Setenv("APP_ENV", "test")
+	router := setupRouter()
+	return router
+}
 
-	Convey("Given a server instance", t, func() {
-		gin.SetMode(gin.TestMode)
-		os.Setenv("APP_ENV", "test")
-		router := setupRouter()
+func TestHealthcheck(t *testing.T) {
+	router := createServerFixture(t)
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/health", nil)
+	router.ServeHTTP(w, req)
 
-		Convey("it has healtcheck endpoint", func() {
-			w := httptest.NewRecorder()
-			req, _ := http.NewRequest("GET", "/health", nil)
-			router.ServeHTTP(w, req)
-
-			assert.Equal(t, 200, w.Code)
-			assert.Equal(t, "Health check", w.Body.String())
-		})
-	})
+	assert.Equal(t, 200, w.Code)
+	assert.Equal(t, "Health check!", w.Body.String())
 }
