@@ -23,8 +23,8 @@ format:                       ## Apply format to all files
 test:                         ## Run all tests
 	go test ./... -v
 test/cover:                         ## Run all tests
-	$(GOTEST) -v -coverprofile=coverage.out ./...
-	$(GOCOVER) -func=coverage.out
-	$(GOCOVER) -html=coverage.out
+	go test ./... -v -coverprofile=coverage.out ./...
+	go tool cover -func=coverage.out
+	go tool cover -html=coverage.out
 start/dev:
 	air
