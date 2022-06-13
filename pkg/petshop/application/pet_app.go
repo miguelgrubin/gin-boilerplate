@@ -26,9 +26,9 @@ type PetUpdatersParams struct {
 type PetUseCasesInterface interface {
 	Creator(PetCreatorParams) (domain.Pet, error)
 	Finder(PetFinderParams) ([]domain.Pet, error)
-	Showher(shared.EntityId) (domain.Pet, error)
-	Updater(shared.EntityId, PetUpdatersParams) (domain.Pet, error)
-	Deleter(shared.EntityId) error
+	Showher(shared.EntityID) (domain.Pet, error)
+	Updater(shared.EntityID, PetUpdatersParams) (domain.Pet, error)
+	Deleter(shared.EntityID) error
 }
 
 func NewPetUseCases(pr domain.PetRepository) PetUseCases {
@@ -48,18 +48,18 @@ func (p *PetUseCases) Finder(_ PetFinderParams) ([]domain.Pet, error) {
 	return p.pr.FindAll()
 }
 
-func (p *PetUseCases) Showher(petId shared.EntityId) (domain.Pet, error) {
-	pet, err := p.pr.FindOne(petId)
+func (p *PetUseCases) Showher(petID shared.EntityID) (domain.Pet, error) {
+	pet, err := p.pr.FindOne(petID)
 	if err != nil {
-		return domain.Pet{}, err
+		return domain.Pet{}, &domain.PetNotFound{ID: petID.AsString()}
 	}
 	return *pet, nil
 }
 
-func (p *PetUseCases) Updater(petId shared.EntityId, payload PetUpdatersParams) (domain.Pet, error) {
-	pet, err := p.pr.FindOne(petId)
+func (p *PetUseCases) Updater(petID shared.EntityID, payload PetUpdatersParams) (domain.Pet, error) {
+	pet, err := p.pr.FindOne(petID)
 	if err != nil {
-		return domain.Pet{}, err
+		return domain.Pet{}, &domain.PetNotFound{ID: petID.AsString()}
 	}
 	pet.Update(domain.UpdatePetParams(payload))
 
@@ -71,6 +71,10 @@ func (p *PetUseCases) Updater(petId shared.EntityId, payload PetUpdatersParams) 
 	return *pet, nil
 }
 
-func (p *PetUseCases) Deleter(petId shared.EntityId) error {
-	return p.pr.Delete(petId)
+func (p *PetUseCases) Deleter(petID shared.EntityID) error {
+	_, err := p.pr.FindOne(petID)
+	if err != nil {
+		return &domain.PetNotFound{ID: petID.AsString()}
+	}
+	return p.pr.Delete(petID)
 }

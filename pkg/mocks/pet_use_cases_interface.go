@@ -38,11 +38,11 @@ func (_m *PetUseCasesInterface) Creator(_a0 application.PetCreatorParams) (domai
 }
 
 // Deleter provides a mock function with given fields: _a0
-func (_m *PetUseCasesInterface) Deleter(_a0 shared.EntityId) error {
+func (_m *PetUseCasesInterface) Deleter(_a0 shared.EntityID) error {
 	ret := _m.Called(_a0)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(shared.EntityId) error); ok {
+	if rf, ok := ret.Get(0).(func(shared.EntityID) error); ok {
 		r0 = rf(_a0)
 	} else {
 		r0 = ret.Error(0)
@@ -75,18 +75,18 @@ func (_m *PetUseCasesInterface) Finder(_a0 application.PetFinderParams) ([]domai
 }
 
 // Showher provides a mock function with given fields: _a0
-func (_m *PetUseCasesInterface) Showher(_a0 shared.EntityId) (domain.Pet, error) {
+func (_m *PetUseCasesInterface) Showher(_a0 shared.EntityID) (domain.Pet, error) {
 	ret := _m.Called(_a0)
 
 	var r0 domain.Pet
-	if rf, ok := ret.Get(0).(func(shared.EntityId) domain.Pet); ok {
+	if rf, ok := ret.Get(0).(func(shared.EntityID) domain.Pet); ok {
 		r0 = rf(_a0)
 	} else {
 		r0 = ret.Get(0).(domain.Pet)
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(shared.EntityId) error); ok {
+	if rf, ok := ret.Get(1).(func(shared.EntityID) error); ok {
 		r1 = rf(_a0)
 	} else {
 		r1 = ret.Error(1)
@@ -96,18 +96,18 @@ func (_m *PetUseCasesInterface) Showher(_a0 shared.EntityId) (domain.Pet, error)
 }
 
 // Updater provides a mock function with given fields: _a0, _a1
-func (_m *PetUseCasesInterface) Updater(_a0 shared.EntityId, _a1 application.PetUpdatersParams) (domain.Pet, error) {
+func (_m *PetUseCasesInterface) Updater(_a0 shared.EntityID, _a1 application.PetUpdatersParams) (domain.Pet, error) {
 	ret := _m.Called(_a0, _a1)
 
 	var r0 domain.Pet
-	if rf, ok := ret.Get(0).(func(shared.EntityId, application.PetUpdatersParams) domain.Pet); ok {
+	if rf, ok := ret.Get(0).(func(shared.EntityID, application.PetUpdatersParams) domain.Pet); ok {
 		r0 = rf(_a0, _a1)
 	} else {
 		r0 = ret.Get(0).(domain.Pet)
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(shared.EntityId, application.PetUpdatersParams) error); ok {
+	if rf, ok := ret.Get(1).(func(shared.EntityID, application.PetUpdatersParams) error); ok {
 		r1 = rf(_a0, _a1)
 	} else {
 		r1 = ret.Error(1)

@@ -15,11 +15,11 @@ type PetRepository struct {
 }
 
 // Delete provides a mock function with given fields: _a0
-func (_m *PetRepository) Delete(_a0 shared.EntityId) error {
+func (_m *PetRepository) Delete(_a0 shared.EntityID) error {
 	ret := _m.Called(_a0)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(shared.EntityId) error); ok {
+	if rf, ok := ret.Get(0).(func(shared.EntityID) error); ok {
 		r0 = rf(_a0)
 	} else {
 		r0 = ret.Error(0)
@@ -52,11 +52,11 @@ func (_m *PetRepository) FindAll() ([]domain.Pet, error) {
 }
 
 // FindOne provides a mock function with given fields: _a0
-func (_m *PetRepository) FindOne(_a0 shared.EntityId) (*domain.Pet, error) {
+func (_m *PetRepository) FindOne(_a0 shared.EntityID) (*domain.Pet, error) {
 	ret := _m.Called(_a0)
 
 	var r0 *domain.Pet
-	if rf, ok := ret.Get(0).(func(shared.EntityId) *domain.Pet); ok {
+	if rf, ok := ret.Get(0).(func(shared.EntityID) *domain.Pet); ok {
 		r0 = rf(_a0)
 	} else {
 		if ret.Get(0) != nil {
@@ -65,7 +65,7 @@ func (_m *PetRepository) FindOne(_a0 shared.EntityId) (*domain.Pet, error) {
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(shared.EntityId) error); ok {
+	if rf, ok := ret.Get(1).(func(shared.EntityID) error); ok {
 		r1 = rf(_a0)
 	} else {
 		r1 = ret.Error(1)

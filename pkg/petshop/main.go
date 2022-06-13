@@ -11,9 +11,9 @@ import (
 )
 
 func NewPetShopServer(db *gorm.DB, r *gin.RouterGroup) {
-	pr := storage.NewPetRepository(db)
-	useCases := application.NewPetUseCases(pr)
-	server.NewRouterGroup(r, &useCases)
+	petRepository := storage.NewPetRepository(db)
+	petUseCases := application.NewPetUseCases(petRepository)
+	server.NewPetRouterGroup(r, &petUseCases)
 }
 
 func NewPetShopMigrator(db *gorm.DB) {
@@ -25,5 +25,9 @@ func NewPetShopMigrator(db *gorm.DB) {
 }
 
 func NewPetShopSeeder(db *gorm.DB) {
+	_, err := storage.SeedPets(db)
 
+	if err != nil {
+		log.Print(err)
+	}
 }

@@ -1,8 +1,11 @@
 package storage_test
 
 import (
+	"fmt"
 	"log"
 	"os"
+	"path/filepath"
+	"runtime"
 
 	"github.com/miguelgrubin/gin-boilerplate/pkg"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/infrastructure/storage"
@@ -15,7 +18,13 @@ func DBConn() (*gorm.DB, error) {
 }
 
 func LocalDatabase() (*gorm.DB, error) {
-	err := os.Chdir("../../../../test")
+	var (
+		_, b, _, _ = runtime.Caller(0)
+		basepath   = filepath.Dir(b)
+	)
+	rootpath := fmt.Sprintf("%s/../../../../test", basepath)
+	err := os.Chdir(rootpath)
+
 	if err != nil {
 		log.Println("Can not load test config file")
 		return nil, err

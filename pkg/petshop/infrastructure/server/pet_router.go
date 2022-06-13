@@ -8,7 +8,7 @@ import (
 	"github.com/miguelgrubin/gin-boilerplate/pkg/shared"
 )
 
-func NewRouterGroup(v1 *gin.RouterGroup, useCases application.PetUseCasesInterface) {
+func NewPetRouterGroup(v1 *gin.RouterGroup, useCases application.PetUseCasesInterface) {
 	v1.POST("/pets", func(c *gin.Context) {
 		var petParams PetCreateRequest
 		if err := c.ShouldBindJSON(&petParams); err != nil {
@@ -29,17 +29,17 @@ func NewRouterGroup(v1 *gin.RouterGroup, useCases application.PetUseCasesInterfa
 	})
 
 	v1.GET("/pet/:id", func(c *gin.Context) {
-		petId := shared.EntityId(c.Param("id"))
-		pet, err := useCases.Showher(petId)
+		petID := shared.EntityID(c.Param("id"))
+		pet, err := useCases.Showher(petID)
 		if err != nil {
-			c.JSON(404, err.Error())
+			handleError(c, err)
 			return
 		}
-		c.JSON(200, PetReponseFromDomain(pet))
+		c.JSON(http.StatusOK, PetReponseFromDomain(pet))
 	})
 
 	v1.PATCH("/pet/:id", func(c *gin.Context) {
-		petId := shared.EntityId(c.Param("id"))
+		petID := shared.EntityID(c.Param("id"))
 		var petParams PetUpdateRequest
 		if err := c.ShouldBindJSON(&petParams); err != nil {
 			c.JSON(http.StatusBadRequest, err.Error())
@@ -47,23 +47,23 @@ func NewRouterGroup(v1 *gin.RouterGroup, useCases application.PetUseCasesInterfa
 		}
 
 		payload := (application.PetUpdatersParams)(petParams)
-		pet, err := useCases.Updater(petId, payload)
+		pet, err := useCases.Updater(petID, payload)
 
 		if err != nil {
-			c.JSON(404, err.Error())
+			handleError(c, err)
 			return
 		}
-		c.JSON(200, PetReponseFromDomain(pet))
+		c.JSON(http.StatusOK, PetReponseFromDomain(pet))
 	})
 
 	v1.DELETE("/pet/:id", func(c *gin.Context) {
-		petId := shared.EntityId(c.Param("id"))
-		err := useCases.Deleter(petId)
+		petID := shared.EntityID(c.Param("id"))
+		err := useCases.Deleter(petID)
 
 		if err != nil {
-			c.JSON(404, err.Error())
+			handleError(c, err)
 			return
 		}
-		c.JSON(204, nil)
+		c.JSON(http.StatusNoContent, nil)
 	})
 }

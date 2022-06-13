@@ -25,7 +25,7 @@ func (pe *PetEntity) TableName() string {
 
 func (pe *PetEntity) ToDomain() domain.Pet {
 	return domain.Pet{
-		ID:        shared.EntityId(pe.ID),
+		ID:        shared.EntityID(pe.ID),
 		Name:      pe.Name,
 		Status:    pe.Status,
 		CreatedAt: shared.DateTime(pe.CreatedAt),
@@ -66,14 +66,14 @@ func (r SQLPetRepository) Save(pet domain.Pet) error {
 	return err
 }
 
-func (r SQLPetRepository) FindOne(id shared.EntityId) (*domain.Pet, error) {
+func (r SQLPetRepository) FindOne(id shared.EntityID) (*domain.Pet, error) {
 	var pet PetEntity
 	err := r.db.Debug().Where("id = ?", id).Take(&pet).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, &domain.PetNotFound{ID: id.AsString()}
+	}
 	if err != nil {
 		return nil, err
-	}
-	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return nil, errors.New("pet not found")
 	}
 	petDomain := pet.ToDomain()
 	return &petDomain, nil
@@ -85,9 +85,6 @@ func (r SQLPetRepository) FindAll() ([]domain.Pet, error) {
 	if err != nil {
 		return nil, err
 	}
-	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return nil, errors.New("user not found")
-	}
 	domainPets := make([]domain.Pet, len(pets))
 	for i, v := range pets {
 		domainPets[i] = v.ToDomain()
@@ -95,7 +92,7 @@ func (r SQLPetRepository) FindAll() ([]domain.Pet, error) {
 	return domainPets, nil
 }
 
-func (r SQLPetRepository) Delete(id shared.EntityId) error {
+func (r SQLPetRepository) Delete(id shared.EntityID) error {
 	var pet PetEntity
 	err := r.db.Debug().Where("id = ?", id).Delete(&pet).Error
 	if err != nil {

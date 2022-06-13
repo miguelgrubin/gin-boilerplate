@@ -20,7 +20,7 @@ func TestPetShowerWhenHasResult(t *testing.T) {
 	pr.On("FindOne", pet.ID).Return(&pet, nil)
 	useCases := application.NewPetUseCases(pr)
 
-	result, _ := useCases.Showher(shared.EntityId(pet.ID))
+	result, _ := useCases.Showher(shared.EntityID(pet.ID))
 
 	pr.AssertExpectations(t)
 	assert.Equal(t, result, pet)
@@ -32,13 +32,13 @@ func TestPetShowerWhenHasNotResult(t *testing.T) {
 		Status: "Active",
 	})
 
-	prError := errors.New("math: square root of negative number")
+	prError := errors.New("Random error from db layer")
 	pr := new(mocks.PetRepository)
 	pr.On("FindOne", pet.ID).Return(nil, prError)
 	useCases := application.NewPetUseCases(pr)
+	domainErr := &domain.PetNotFound{ID: pet.ID.AsString()}
 
-	_, err := useCases.Showher(shared.EntityId(pet.ID))
-
+	_, err := useCases.Showher(shared.EntityID(pet.ID))
 	pr.AssertExpectations(t)
-	assert.Equal(t, err, prError)
+	assert.Equal(t, err, domainErr)
 }

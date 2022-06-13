@@ -4,9 +4,9 @@ import (
 	"time"
 )
 
-type EntityId string
+type EntityID string
 
-func (e EntityId) AsString() string {
+func (e EntityID) AsString() string {
 	return string(e)
 }
 

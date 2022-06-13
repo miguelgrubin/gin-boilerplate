@@ -8,7 +8,7 @@ import (
 )
 
 type Pet struct {
-	ID        shared.EntityId
+	ID        shared.EntityID
 	Name      string
 	Status    string
 	CreatedAt shared.DateTime
@@ -41,7 +41,7 @@ func (p *Pet) Update(payload UpdatePetParams) {
 func NewPet(payload CreatePetParams) Pet {
 	id := uuid.New().String()
 	pet := Pet{
-		ID:        shared.EntityId(id),
+		ID:        shared.EntityID(id),
 		Name:      payload.Name,
 		Status:    payload.Status,
 		UpdatedAt: shared.DateTime(time.Now()),
