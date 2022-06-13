@@ -1,5 +1,4 @@
 run:
-  go: '1.18'
   # default concurrency is a available CPU number
   concurrency: 4
   # timeout for analysis, e.g. 30s, 5m, default is 1m
@@ -9,4 +8,16 @@ run:
   # include test files or not, default is true
   tests: true
   modules-download-mode: vendor
-  
+  linters:
+    disable-all: true
+    enable:
+      - deadcode
+      - errcheck
+      - gosimple
+      - govet
+      - ineffassign
+      - staticcheck
+      - typecheck
+      - unused
+      - varcheck
+      - gofmt
