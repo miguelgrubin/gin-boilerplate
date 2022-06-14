@@ -1,9 +1,11 @@
-package pkg
+package pkg_test
 
 import (
 	"log"
 	"os"
 	"testing"
+
+	"github.com/miguelgrubin/gin-boilerplate/pkg"
 )
 
 func useTestDir(t *testing.T) {
@@ -44,7 +46,7 @@ func TestReadConfigWithValidEnv(t *testing.T) {
 	useTestDir(t)
 	os.Setenv("APP_ENV", "test")
 
-	config, err := ReadConfig()
+	config, err := pkg.ReadConfig()
 
 	if err != nil {
 		t.Log(err.Error())
@@ -59,7 +61,7 @@ func TestReadConfigWithInvalidEnv(t *testing.T) {
 	useTestDir(t)
 	os.Setenv("APP_ENV", "no-valid-env")
 
-	config, err := ReadConfig()
+	config, err := pkg.ReadConfig()
 
 	if err != nil {
 		t.Log(err.Error())
@@ -74,7 +76,7 @@ func TestReadConfigWithoutEnv(t *testing.T) {
 	useTestDir(t)
 	os.Unsetenv("APP_ENV")
 
-	config, err := ReadConfig()
+	config, err := pkg.ReadConfig()
 
 	if err != nil {
 		t.Log(err.Error())
@@ -93,7 +95,7 @@ func TestReadConfigWithNonExistantFile(t *testing.T) {
 	backupLocalConfig(localPath, tmpPath)
 	os.Setenv("APP_ENV", "local")
 
-	_, err := ReadConfig()
+	_, err := pkg.ReadConfig()
 
 	if err == nil {
 		t.Fatal("ReadConfig must return an error")
@@ -107,7 +109,7 @@ func TestWriteConfig(t *testing.T) {
 	os.Setenv("APP_ENV", "local")
 	os.RemoveAll("config_local.yaml")
 
-	err := WriteConfig()
+	err := pkg.WriteConfig()
 
 	if err != nil {
 		t.Fatal("Config could not be writed")
