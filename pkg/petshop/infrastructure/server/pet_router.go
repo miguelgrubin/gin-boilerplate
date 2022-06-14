@@ -16,21 +16,32 @@ func NewPetRouterGroup(v1 *gin.RouterGroup, useCases application.PetUseCasesInte
 			return
 		}
 
-		pet, _ := useCases.Creator(application.PetCreatorParams{
+		pet, err := useCases.Creator(application.PetCreatorParams{
 			Name:   petParams.Name,
 			Status: petParams.Status,
 		})
+
+		if err != nil {
+			handleError(c, err)
+			return
+		}
 		c.JSON(http.StatusCreated, PetReponseFromDomain(pet))
 	})
 
 	v1.GET("/pets", func(c *gin.Context) {
-		pets, _ := useCases.Finder(application.PetFinderParams{})
+		pets, err := useCases.Finder(application.PetFinderParams{})
+
+		if err != nil {
+			handleError(c, err)
+			return
+		}
 		c.JSON(http.StatusOK, PetResponseListFromDomain(pets))
 	})
 
 	v1.GET("/pet/:id", func(c *gin.Context) {
 		petID := shared.EntityID(c.Param("id"))
 		pet, err := useCases.Showher(petID)
+
 		if err != nil {
 			handleError(c, err)
 			return

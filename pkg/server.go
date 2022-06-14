@@ -14,14 +14,14 @@ func RunServer() {
 	if err != nil {
 		log.Print("Config file not found: using default config")
 	}
-	r := setupRouter()
+	r := SetupRouter()
 	err = r.Run(viper.GetString("server.address"))
 	if err != nil {
 		log.Print(err)
 	}
 }
 
-func setupRouter() *gin.Engine {
+func SetupRouter() *gin.Engine {
 	r := gin.New()
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
