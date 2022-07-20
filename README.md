@@ -31,25 +31,20 @@ This repository contains a golang API using hexagonal architecture.
 
 | Method | URL                       |
 | ------ | :------------------------ |
-| GET    | /swagger.yaml             |
 | GET    | /health                   |
-| GET    | /v1/pets                  |
 | POST   | /v1/pets                  |
+| GET    | /v1/pets                  |
 | GET    | /v1/pet/{petId}           |
 | PATCH  | /v1/pet/{petId}           |
 | DELETE | /v1/pet/{petId}           |
 | GET    | /v1/tags                  |
-| POST   | /v1/tags                  |
-| GET    | /v1/tag/{tagId}           |
-| DELETE | /v1/tag/{tagId}           |
-| GET    | /v1/categories            |
 | POST   | /v1/categories            |
+| GET    | /v1/categories            |
 | GET    | /v1/category/{categoryId} |
 | DELETE | /v1/category/{categoryId} |
-| POST   | /v1/store/order           |
-| GET    | /v1/store/order           |
-| DELETE | /v1/store/order           |
-| POST   | /v1/store/confirm-order   |
+| POST   | /v1/orders                |
+| GET    | /v1/orders                |
+| GET    | /v1/order/{orderId}       |
 
 ## CLI Usage
 
