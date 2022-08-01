@@ -2,7 +2,11 @@ name: Go
 
 on:
   push:
-    branches: [ "master" ]
+    branches:
+      - "master"
+      - "feature/**"
+      - "hotfix/**"
+      - "bugfix/**"
   pull_request:
     branches: [ "master" ]
 
@@ -11,15 +15,27 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Set up Go
-      uses: actions/setup-go@v3
-      with:
-        go-version: 1.18
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.18
 
-    - name: Build
-      run: go build -v ./...
+      - name: Install revive
+        run: go install github.com/mgechev/revive@latest
 
-    - name: Test
-      run: go test -v ./...
+      - name: Lint
+        run: revive -config revive.toml -exclude vendor/... -formatter friendly ./...
+
+      - name: Build
+        run: go build -v ./...
+
+      - name: Test
+        run: go test -v ./...
+
+      - name: Run Gosec Security Scanner
+        uses: securego/gosec@master
+        with:
+          args: ./...
+
