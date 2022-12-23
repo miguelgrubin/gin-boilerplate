@@ -6,16 +6,19 @@ import (
 	"github.com/spf13/viper"
 )
 
+/* ServerConfig contains info about how the app will be served */
 type ServerConfig struct {
 	Address string
 	HTTPS   bool
 }
 
+/* DatabaseConfig contains info about SQL Database */
 type DatabaseConfig struct {
-	Driver  string
+	Driver  string // (postgres, mysql, sqlite3)
 	Address string
 }
 
+/* AppConfig contains all configuration to run app instance */
 type AppConfig struct {
 	Server   ServerConfig
 	Database DatabaseConfig

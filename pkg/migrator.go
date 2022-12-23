@@ -7,6 +7,7 @@ import (
 	"github.com/miguelgrubin/gin-boilerplate/pkg/shared/infrastructure"
 )
 
+/* MigrateAll runs all DB migrations */
 func MigrateAll() {
 	config, err := ReadConfig()
 	if err != nil {

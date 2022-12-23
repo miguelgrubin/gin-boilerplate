@@ -9,6 +9,7 @@ import (
 	"github.com/spf13/viper"
 )
 
+/* RunServer reads config and runs http/https server */
 func RunServer() {
 	_, err := ReadConfig()
 	if err != nil {
@@ -21,6 +22,7 @@ func RunServer() {
 	}
 }
 
+/* SetupRouter creates gin router instance with all app routes */
 func SetupRouter() *gin.Engine {
 	r := gin.New()
 	r.Use(gin.Logger())
@@ -33,6 +35,7 @@ func SetupRouter() *gin.Engine {
 	return r
 }
 
+/* NewServices inyects services on modules (petshop) */
 func NewServices(r *gin.RouterGroup) {
 	db := infrastructure.NewDbConnection(
 		viper.GetString("database.driver"),
