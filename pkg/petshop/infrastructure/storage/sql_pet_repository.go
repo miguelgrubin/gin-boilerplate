@@ -3,40 +3,11 @@ package storage
 import (
 	"errors"
 	"log"
-	"time"
 
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/domain"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/shared"
 	"gorm.io/gorm"
 )
-
-type PetEntity struct {
-	ID        string     `gorm:"primary_key;"`
-	Name      string     `gorm:"size:100;not null;"`
-	Status    string     `gorm:"size:100;not null;"`
-	CreatedAt time.Time  `gorm:"not null;"`
-	UpdatedAt time.Time  `gorm:"not null;"`
-	DeletedAt *time.Time ``
-}
-
-func (pe *PetEntity) TableName() string {
-	return "pets"
-}
-
-func (pe *PetEntity) ToDomain() domain.Pet {
-	return domain.Pet{
-		ID:        shared.EntityID(pe.ID),
-		Name:      pe.Name,
-		Status:    pe.Status,
-		CreatedAt: shared.DateTime(pe.CreatedAt),
-		UpdatedAt: shared.DateTime(pe.UpdatedAt),
-		DeletedAt: (*shared.DateTime)(pe.DeletedAt),
-	}
-}
-
-func PetEntityFromDomain(p domain.Pet) PetEntity {
-	return PetEntity{p.ID.AsString(), p.Name, p.Status, p.CreatedAt.AsTime(), p.UpdatedAt.AsTime(), (*time.Time)(p.DeletedAt)}
-}
 
 type SQLPetRepository struct {
 	db *gorm.DB
@@ -52,7 +23,7 @@ var _ domain.PetRepository = &SQLPetRepository{}
 func (r SQLPetRepository) Save(pet domain.Pet) error {
 	var err error
 	var prev PetEntity
-	err = r.db.First(&prev, "id = ?", pet.ID.AsString()).Error
+	err = r.db.First(&prev, "id = ?", pet.ID.String()).Error
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		err = r.db.Debug().Create(PetEntityFromDomain(pet)).Error
@@ -62,6 +33,7 @@ func (r SQLPetRepository) Save(pet domain.Pet) error {
 		}
 		return nil
 	}
+
 	err = r.db.Debug().Save(PetEntityFromDomain(pet)).Error
 	return err
 }
@@ -70,12 +42,12 @@ func (r SQLPetRepository) FindOne(id shared.EntityID) (*domain.Pet, error) {
 	var pet PetEntity
 	err := r.db.Debug().Where("id = ?", id).Take(&pet).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return nil, &domain.PetNotFound{ID: id.AsString()}
+		return nil, &domain.PetNotFound{ID: id.String()}
 	}
 	if err != nil {
 		return nil, err
 	}
-	petDomain := pet.ToDomain()
+	petDomain := PetEntityToDomain(pet)
 	return &petDomain, nil
 }
 
@@ -87,7 +59,7 @@ func (r SQLPetRepository) FindAll() ([]domain.Pet, error) {
 	}
 	domainPets := make([]domain.Pet, len(pets))
 	for i, v := range pets {
-		domainPets[i] = v.ToDomain()
+		domainPets[i] = PetEntityToDomain(v)
 	}
 	return domainPets, nil
 }
