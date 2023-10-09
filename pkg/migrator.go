@@ -27,5 +27,8 @@ func SeedAll() {
 
 	db := infrastructure.NewDbConnection(config.Database.Driver, config.Database.Address)
 
-	storage.SeedPets(db)
+	_, err = storage.SeedPets(db)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
