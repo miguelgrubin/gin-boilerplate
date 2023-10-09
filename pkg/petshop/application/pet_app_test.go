@@ -37,7 +37,7 @@ func TestPetShowerWhenHasNotResult(t *testing.T) {
 	pr := new(mocks.PetRepository)
 	pr.On("FindOne", pet.ID).Return(nil, prError)
 	useCases := application.NewPetUseCases(pr)
-	domainErr := &domain.PetNotFound{ID: pet.ID.AsString()}
+	domainErr := &domain.PetNotFound{ID: pet.ID.String()}
 
 	_, err := useCases.Showher(shared.EntityID(pet.ID))
 	pr.AssertExpectations(t)
@@ -116,13 +116,13 @@ func TestPetUpdaterWithUnexistantPet(t *testing.T) {
 		Status: "Active",
 	})
 	pr := new(mocks.PetRepository)
-	pr.On("FindOne", pet.ID).Return(&domain.Pet{}, &domain.PetNotFound{ID: pet.ID.AsString()})
+	pr.On("FindOne", pet.ID).Return(&domain.Pet{}, &domain.PetNotFound{ID: pet.ID.String()})
 
 	useCases := application.NewPetUseCases(pr)
 	_, err := useCases.Updater(pet.ID, application.PetUpdatersParams{Name: &newName})
 
 	pr.AssertExpectations(t)
-	assert.ErrorContains(t, err, pet.ID.AsString())
+	assert.ErrorContains(t, err, pet.ID.String())
 }
 
 func TestPetDeleterWithExistantPet(t *testing.T) {
@@ -147,11 +147,11 @@ func TestPetDeleterWithUnexistantPet(t *testing.T) {
 		Status: "Active",
 	})
 	pr := new(mocks.PetRepository)
-	pr.On("FindOne", pet.ID).Return(&domain.Pet{}, &domain.PetNotFound{ID: pet.ID.AsString()})
+	pr.On("FindOne", pet.ID).Return(&domain.Pet{}, &domain.PetNotFound{ID: pet.ID.String()})
 
 	useCases := application.NewPetUseCases(pr)
 	err := useCases.Deleter(pet.ID)
 
 	pr.AssertExpectations(t)
-	assert.ErrorContains(t, err, pet.ID.AsString())
+	assert.ErrorContains(t, err, pet.ID.String())
 }

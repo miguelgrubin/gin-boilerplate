@@ -20,7 +20,7 @@ func TestSaveWithNewPet(t *testing.T) {
 	err = pr.Save(pet)
 
 	storedPet, _ := pr.FindOne(pet.ID)
-	assert.Equal(t, pet.ID.AsString(), storedPet.ID.AsString())
+	assert.Equal(t, pet.ID.String(), storedPet.ID.String())
 	assert.NoError(t, err)
 }
 

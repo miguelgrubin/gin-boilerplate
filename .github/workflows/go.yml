@@ -8,10 +8,9 @@ on:
       - "hotfix/**"
       - "bugfix/**"
   pull_request:
-    branches: [ "master" ]
+    branches: ["master"]
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
     steps:
@@ -34,8 +33,12 @@ jobs:
       - name: Test
         run: go test -v ./...
 
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
       - name: Run Gosec Security Scanner
         uses: securego/gosec@master
         with:
           args: ./...
-

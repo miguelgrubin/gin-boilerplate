@@ -51,7 +51,7 @@ func (p *PetUseCases) Finder(_ PetFinderParams) ([]domain.Pet, error) {
 func (p *PetUseCases) Showher(petID shared.EntityID) (domain.Pet, error) {
 	pet, err := p.pr.FindOne(petID)
 	if err != nil {
-		return domain.Pet{}, &domain.PetNotFound{ID: petID.AsString()}
+		return domain.Pet{}, &domain.PetNotFound{ID: petID.String()}
 	}
 	return *pet, nil
 }
@@ -59,7 +59,7 @@ func (p *PetUseCases) Showher(petID shared.EntityID) (domain.Pet, error) {
 func (p *PetUseCases) Updater(petID shared.EntityID, payload PetUpdatersParams) (domain.Pet, error) {
 	pet, err := p.pr.FindOne(petID)
 	if err != nil {
-		return domain.Pet{}, &domain.PetNotFound{ID: petID.AsString()}
+		return domain.Pet{}, &domain.PetNotFound{ID: petID.String()}
 	}
 	pet.Update(domain.UpdatePetParams(payload))
 
@@ -74,7 +74,7 @@ func (p *PetUseCases) Updater(petID shared.EntityID, payload PetUpdatersParams) 
 func (p *PetUseCases) Deleter(petID shared.EntityID) error {
 	_, err := p.pr.FindOne(petID)
 	if err != nil {
-		return &domain.PetNotFound{ID: petID.AsString()}
+		return &domain.PetNotFound{ID: petID.String()}
 	}
 	return p.pr.Delete(petID)
 }
