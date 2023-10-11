@@ -26,7 +26,8 @@ bin/
 # Tmp files
 tmp/
 
-.vscode/
+.vscode/*
+!.vscode/launch.json
 
 coverage
 coverage.out
