@@ -1,6 +1,14 @@
-quiet: False
+with-expecter: True
+inpackage: False
+dir: mocks/{{ replaceAll .InterfaceDirRelative "internal" "internal_" }} 
+mockname: "{{.InterfaceName}}"
+outpkg: "{{.PackageName}}"
+filename: "{{.InterfaceName}}.go"
 all: True
-keeptree: False
-case: "underscore"
-dir: "./pkg"
-output: "./pkg/mocks"
+packages:
+  github.com/miguelgrubin/gin-boilerplate/pkg:
+    config:
+      recursive: True
+  github.com/miguelgrubin/gin-boilerplate/cmd:
+    config:
+      recursive: True

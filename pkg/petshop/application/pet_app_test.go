@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/miguelgrubin/gin-boilerplate/pkg/mocks"
+	mocks "github.com/miguelgrubin/gin-boilerplate/mocks/pkg/petshop/domain"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/application"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/domain"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/shared"
