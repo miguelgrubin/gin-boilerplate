@@ -1,3 +1,4 @@
+// Package shared provides common services, custom types and domain definitions used in other modules.
 package shared
 
 import (

@@ -1,3 +1,4 @@
+// Package infrastructure provides common services such as database connections, auth, etc.
 package infrastructure
 
 import (

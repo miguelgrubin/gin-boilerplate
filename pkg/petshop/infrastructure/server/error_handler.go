@@ -1,3 +1,4 @@
+// Package server provides dtos, error handling and http router to expose petshop endpoints.
 package server
 
 import (

@@ -1,3 +1,4 @@
+// Package petshop provides a module of petshop.
 package petshop
 
 import (

@@ -1,3 +1,4 @@
+// Package pkg is the root and provides config service and entry points for running the application.
 package pkg
 
 import (

@@ -1,3 +1,4 @@
+// Package storage provides specific way to store petshop data into databases.
 package storage
 
 import "time"

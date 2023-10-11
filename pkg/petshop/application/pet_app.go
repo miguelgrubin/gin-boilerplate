@@ -1,3 +1,4 @@
+// Package application provides use cases for petshop module.
 package application
 
 import (

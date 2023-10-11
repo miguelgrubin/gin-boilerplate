@@ -1,3 +1,4 @@
+// Package domain provides domain definition of petshop entities and errors.
 package domain
 
 import "fmt"
