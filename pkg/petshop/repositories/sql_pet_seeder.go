@@ -1,4 +1,4 @@
-package storage
+package repositories
 
 import (
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/domain"

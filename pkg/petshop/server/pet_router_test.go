@@ -11,16 +11,16 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	mocks "github.com/miguelgrubin/gin-boilerplate/mocks/pkg/petshop/application"
-	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/application"
+	mocks "github.com/miguelgrubin/gin-boilerplate/mocks/pkg/petshop/use_cases"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/domain"
-	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/infrastructure/server"
+	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/server"
+	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/use_cases"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/shared"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
 
-func createServerFixture(t *testing.T, useCases application.PetUseCasesInterface) *gin.Engine {
+func createServerFixture(t *testing.T, useCases use_cases.PetUseCasesInterface) *gin.Engine {
 	gin.SetMode(gin.TestMode)
 	os.Setenv("APP_ENV", "test")
 	router := gin.New()
@@ -37,7 +37,7 @@ func TestGetPets(t *testing.T) {
 		Status: "Active",
 	})}
 	puc := new(mocks.PetUseCasesInterface)
-	puc.On("Finder", mock.AnythingOfType("application.PetFinderParams")).Return(pets, nil)
+	puc.On("Finder", mock.AnythingOfType("use_cases.PetFinderParams")).Return(pets, nil)
 	router := createServerFixture(t, puc)
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/v1/pets", nil)
@@ -54,7 +54,7 @@ func TestGetPets(t *testing.T) {
 func TestGetPetsWithRandomError(t *testing.T) {
 	pets := []domain.Pet{}
 	puc := new(mocks.PetUseCasesInterface)
-	puc.On("Finder", mock.AnythingOfType("application.PetFinderParams")).Return(pets, errors.New("random error"))
+	puc.On("Finder", mock.AnythingOfType("use_cases.PetFinderParams")).Return(pets, errors.New("random error"))
 	router := createServerFixture(t, puc)
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/v1/pets", nil)
@@ -132,7 +132,7 @@ func TestPostPet(t *testing.T) {
 	})
 	pet := domain.NewPet(domain.CreatePetParams{Name: name, Status: status})
 	puc := new(mocks.PetUseCasesInterface)
-	puc.On("Creator", mock.AnythingOfType("application.PetCreatorParams")).Return(pet, nil)
+	puc.On("Creator", mock.AnythingOfType("use_cases.PetCreatorParams")).Return(pet, nil)
 	router := createServerFixture(t, puc)
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("POST", "/v1/pets", bytes.NewBuffer(body))
@@ -158,7 +158,7 @@ func TestPatchPet(t *testing.T) {
 	petId := pet.ID
 	validPayload := "{\"status\": \"sleeping\"}"
 	puc := new(mocks.PetUseCasesInterface)
-	puc.On("Updater", petId, mock.AnythingOfType("application.PetUpdatersParams")).Return(domain.Pet{}, &domain.PetNotFound{ID: petId.String()})
+	puc.On("Updater", petId, mock.AnythingOfType("use_cases.PetUpdatersParams")).Return(domain.Pet{}, &domain.PetNotFound{ID: petId.String()})
 	router := createServerFixture(t, puc)
 	w := httptest.NewRecorder()
 	url := fmt.Sprintf("/v1/pet/%s", petId.String())
@@ -173,7 +173,7 @@ func TestPatchPetWithNotFoundError(t *testing.T) {
 	petId := pet.ID
 	validPayload := "{\"status\": \"sleeping\"}"
 	puc := new(mocks.PetUseCasesInterface)
-	puc.On("Updater", petId, mock.AnythingOfType("application.PetUpdatersParams")).Return(pet, nil)
+	puc.On("Updater", petId, mock.AnythingOfType("use_cases.PetUpdatersParams")).Return(pet, nil)
 	router := createServerFixture(t, puc)
 	w := httptest.NewRecorder()
 	url := fmt.Sprintf("/v1/pet/%s", petId.String())

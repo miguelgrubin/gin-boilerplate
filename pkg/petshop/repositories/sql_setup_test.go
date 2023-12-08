@@ -1,4 +1,4 @@
-package storage_test
+package repositories_test
 
 import (
 	"fmt"
@@ -8,8 +8,8 @@ import (
 	"runtime"
 
 	"github.com/miguelgrubin/gin-boilerplate/pkg"
-	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/infrastructure/storage"
-	"github.com/miguelgrubin/gin-boilerplate/pkg/shared/infrastructure"
+	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/repositories"
+	"github.com/miguelgrubin/gin-boilerplate/pkg/shared/storage"
 	"gorm.io/gorm"
 )
 
@@ -35,14 +35,14 @@ func LocalDatabase() (*gorm.DB, error) {
 		return nil, err
 	}
 
-	db := infrastructure.NewDbConnection(appConfig.Database.Driver, appConfig.Database.Address)
+	db := storage.NewDbConnection(appConfig.Database.Driver, appConfig.Database.Address)
 
-	err = db.Migrator().DropTable(&storage.PetEntity{})
+	err = db.Migrator().DropTable(&repositories.PetEntity{})
 	if err != nil {
 		return nil, err
 	}
 
-	err = storage.Automigrate(db)
+	err = repositories.Automigrate(db)
 	if err != nil {
 		return nil, err
 	}

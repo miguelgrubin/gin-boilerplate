@@ -1,4 +1,4 @@
-package storage
+package repositories
 
 import (
 	"errors"
@@ -13,12 +13,12 @@ type SQLPetRepository struct {
 	db *gorm.DB
 }
 
-func NewPetRepository(db *gorm.DB) domain.PetRepository {
-	var petRepository domain.PetRepository = SQLPetRepository{db}
+func NewPetRepository(db *gorm.DB) PetRepository {
+	var petRepository PetRepository = SQLPetRepository{db}
 	return petRepository
 }
 
-var _ domain.PetRepository = &SQLPetRepository{}
+var _ PetRepository = &SQLPetRepository{}
 
 func (r SQLPetRepository) Save(pet domain.Pet) error {
 	var err error

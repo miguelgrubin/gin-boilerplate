@@ -1,5 +1,5 @@
-// Package infrastructure provides common services such as database connections, auth, etc.
-package infrastructure
+// Package storage provides common services such as database connections, auth, etc.
+package storage
 
 import (
 	"gorm.io/driver/mysql"
