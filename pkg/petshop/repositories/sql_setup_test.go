@@ -22,7 +22,7 @@ func LocalDatabase() (*gorm.DB, error) {
 		_, b, _, _ = runtime.Caller(0)
 		basepath   = filepath.Dir(b)
 	)
-	rootpath := fmt.Sprintf("%s/../../../../test", basepath)
+	rootpath := fmt.Sprintf("%s/../../../test", basepath)
 	err := os.Chdir(rootpath)
 
 	if err != nil {

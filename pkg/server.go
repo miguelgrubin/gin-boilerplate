@@ -5,7 +5,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/miguelgrubin/gin-boilerplate/docs"
-	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop"
+	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/repositories"
+	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/server"
+	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/usecases"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/shared/storage"
 	"github.com/spf13/viper"
 	swaggerFiles "github.com/swaggo/files"
@@ -58,5 +60,8 @@ func NewServices(r *gin.RouterGroup) {
 		viper.GetString("database.driver"),
 		viper.GetString("database.address"),
 	)
-	petshop.NewPetShopServer(db, r)
+	pr := repositories.NewPetShopRepositories(db)
+	pu := usecases.NewPetShopUseCases(pr)
+	pc := server.NewPetShopController(pr, pu)
+	pc.SetupRoutes(r)
 }

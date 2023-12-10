@@ -3,7 +3,6 @@ package pkg
 import (
 	"log"
 
-	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/repositories"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/shared/storage"
 )
@@ -16,7 +15,11 @@ func MigrateAll() {
 	}
 
 	db := storage.NewDbConnection(config.Database.Driver, config.Database.Address)
-	petshop.NewPetShopMigrator(db)
+
+	err = repositories.Automigrate(db)
+	if err != nil {
+		log.Print(err)
+	}
 }
 
 func SeedAll() {

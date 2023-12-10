@@ -1,5 +1,5 @@
-// Package use_cases provides use cases for petshop module.
-package use_cases
+// Package usecases provides use cases for petshop module.
+package usecases
 
 import (
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/domain"
