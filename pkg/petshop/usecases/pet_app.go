@@ -1,13 +1,14 @@
-// Package application provides use cases for petshop module.
-package application
+// Package usecases provides use cases for petshop module.
+package usecases
 
 import (
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/domain"
+	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/repositories"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/shared"
 )
 
 type PetUseCases struct {
-	pr domain.PetRepository
+	pr repositories.PetRepository
 }
 
 var _ PetUseCasesInterface = &PetUseCases{}
@@ -32,7 +33,7 @@ type PetUseCasesInterface interface {
 	Deleter(shared.EntityID) error
 }
 
-func NewPetUseCases(pr domain.PetRepository) PetUseCases {
+func NewPetUseCases(pr repositories.PetRepository) PetUseCases {
 	return PetUseCases{pr}
 }
 

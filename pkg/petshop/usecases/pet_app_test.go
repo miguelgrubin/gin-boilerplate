@@ -1,12 +1,12 @@
-package application_test
+package usecases_test
 
 import (
 	"errors"
 	"testing"
 
 	mocks "github.com/miguelgrubin/gin-boilerplate/mocks/pkg/petshop/domain"
-	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/application"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/domain"
+	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/usecases"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/shared"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -19,7 +19,7 @@ func TestPetShowerWhenHasResult(t *testing.T) {
 	})
 	pr := new(mocks.PetRepository)
 	pr.On("FindOne", pet.ID).Return(&pet, nil)
-	useCases := application.NewPetUseCases(pr)
+	useCases := usecases.NewPetUseCases(pr)
 
 	result, _ := useCases.Showher(shared.EntityID(pet.ID))
 
@@ -36,7 +36,7 @@ func TestPetShowerWhenHasNotResult(t *testing.T) {
 	prError := errors.New("Random error from db layer")
 	pr := new(mocks.PetRepository)
 	pr.On("FindOne", pet.ID).Return(nil, prError)
-	useCases := application.NewPetUseCases(pr)
+	useCases := usecases.NewPetUseCases(pr)
 	domainErr := &domain.PetNotFound{ID: pet.ID.String()}
 
 	_, err := useCases.Showher(shared.EntityID(pet.ID))
@@ -50,8 +50,8 @@ func TestPetCreatorWithNoErrorOnSave(t *testing.T) {
 
 	pr := new(mocks.PetRepository)
 	pr.On("Save", mock.AnythingOfType("domain.Pet")).Return(nil)
-	useCases := application.NewPetUseCases(pr)
-	pet, err := useCases.Creator(application.PetCreatorParams{
+	useCases := usecases.NewPetUseCases(pr)
+	pet, err := useCases.Creator(usecases.PetCreatorParams{
 		Name:   name,
 		Status: status,
 	})
@@ -68,8 +68,8 @@ func TestPetCreatorWithErrorOnSave(t *testing.T) {
 
 	pr := new(mocks.PetRepository)
 	pr.On("Save", mock.AnythingOfType("domain.Pet")).Return(errors.New("generic error from repository"))
-	useCases := application.NewPetUseCases(pr)
-	_, err := useCases.Creator(application.PetCreatorParams{
+	useCases := usecases.NewPetUseCases(pr)
+	_, err := useCases.Creator(usecases.PetCreatorParams{
 		Name:   name,
 		Status: status,
 	})
@@ -83,8 +83,8 @@ func TestPetFinder(t *testing.T) {
 	pr := new(mocks.PetRepository)
 	pr.On("FindAll").Return(pets, nil)
 
-	useCases := application.NewPetUseCases(pr)
-	result, err := useCases.Finder(application.PetFinderParams{})
+	useCases := usecases.NewPetUseCases(pr)
+	result, err := useCases.Finder(usecases.PetFinderParams{})
 
 	pr.AssertExpectations(t)
 	assert.NoError(t, err)
@@ -101,8 +101,8 @@ func TestPetUpdaterWithExistantPet(t *testing.T) {
 	pr.On("FindOne", pet.ID).Return(&pet, nil)
 	pr.On("Save", mock.AnythingOfType("domain.Pet")).Return(nil)
 
-	useCases := application.NewPetUseCases(pr)
-	result, err := useCases.Updater(pet.ID, application.PetUpdatersParams{Name: &newName})
+	useCases := usecases.NewPetUseCases(pr)
+	result, err := useCases.Updater(pet.ID, usecases.PetUpdatersParams{Name: &newName})
 
 	pr.AssertExpectations(t)
 	assert.NoError(t, err)
@@ -118,8 +118,8 @@ func TestPetUpdaterWithUnexistantPet(t *testing.T) {
 	pr := new(mocks.PetRepository)
 	pr.On("FindOne", pet.ID).Return(&domain.Pet{}, &domain.PetNotFound{ID: pet.ID.String()})
 
-	useCases := application.NewPetUseCases(pr)
-	_, err := useCases.Updater(pet.ID, application.PetUpdatersParams{Name: &newName})
+	useCases := usecases.NewPetUseCases(pr)
+	_, err := useCases.Updater(pet.ID, usecases.PetUpdatersParams{Name: &newName})
 
 	pr.AssertExpectations(t)
 	assert.ErrorContains(t, err, pet.ID.String())
@@ -134,7 +134,7 @@ func TestPetDeleterWithExistantPet(t *testing.T) {
 	pr.On("FindOne", pet.ID).Return(&pet, nil)
 	pr.On("Delete", pet.ID).Return(nil)
 
-	useCases := application.NewPetUseCases(pr)
+	useCases := usecases.NewPetUseCases(pr)
 	err := useCases.Deleter(pet.ID)
 
 	pr.AssertExpectations(t)
@@ -149,7 +149,7 @@ func TestPetDeleterWithUnexistantPet(t *testing.T) {
 	pr := new(mocks.PetRepository)
 	pr.On("FindOne", pet.ID).Return(&domain.Pet{}, &domain.PetNotFound{ID: pet.ID.String()})
 
-	useCases := application.NewPetUseCases(pr)
+	useCases := usecases.NewPetUseCases(pr)
 	err := useCases.Deleter(pet.ID)
 
 	pr.AssertExpectations(t)

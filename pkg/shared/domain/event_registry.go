@@ -1,9 +1,10 @@
+// Package domain provides domain definition of shared contexts.
 package domain
 
 import "time"
 
 type Event struct {
-	Id   string
+	ID   string
 	Date time.Time
 }
 
@@ -19,7 +20,7 @@ func NewEventRegistry() *EventRegistry {
 
 func (er *EventRegistry) AddEvent(id string) {
 	er.Events[id] = Event{
-		Id:   id,
+		ID:   id,
 		Date: time.Now(),
 	}
 }
@@ -38,8 +39,5 @@ func (er *EventRegistry) GetAllEvents() []Event {
 
 func (er *EventRegistry) HasEvent(id string) bool {
 	ev := er.GetEvent(id)
-	if ev.Id != "" {
-		return true
-	}
-	return false
+	return ev.ID != ""
 }

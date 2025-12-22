@@ -1,5 +1,5 @@
-// Package storage provides specific way to store petshop data into databases.
-package storage
+// Package repositories provides specific way to store petshop data into databases.
+package repositories
 
 import "time"
 

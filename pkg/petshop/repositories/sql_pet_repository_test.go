@@ -1,10 +1,10 @@
-package storage_test
+package repositories_test
 
 import (
 	"testing"
 
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/domain"
-	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/infrastructure/storage"
+	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/repositories"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/shared"
 	"github.com/stretchr/testify/assert"
 )
@@ -16,7 +16,7 @@ func TestSaveWithNewPet(t *testing.T) {
 	}
 
 	pet := domain.NewPet(domain.CreatePetParams{Name: "testy", Status: "sleeping"})
-	pr := storage.NewPetRepository(db)
+	pr := repositories.NewPetRepository(db)
 	err = pr.Save(pet)
 
 	storedPet, _ := pr.FindOne(pet.ID)
@@ -29,11 +29,11 @@ func TestSaveWithStoredPet(t *testing.T) {
 	if err != nil {
 		t.Error(err.Error())
 	}
-	pets, _ := storage.SeedPets(db)
+	pets, _ := repositories.SeedPets(db)
 
 	pet := pets[0]
 	pet.Name = "New Name"
-	pr := storage.NewPetRepository(db)
+	pr := repositories.NewPetRepository(db)
 	err = pr.Save(pet)
 
 	storedPet, _ := pr.FindOne(pet.ID)
@@ -46,10 +46,10 @@ func TestFindOneWithResult(t *testing.T) {
 	if err != nil {
 		t.Error(err.Error())
 	}
-	pets, _ := storage.SeedPets(db)
+	pets, _ := repositories.SeedPets(db)
 	pet := pets[0]
 
-	pr := storage.NewPetRepository(db)
+	pr := repositories.NewPetRepository(db)
 	storedPet, prErr := pr.FindOne(pet.ID)
 
 	assert.Equal(t, pet.ID, storedPet.ID)
@@ -62,7 +62,7 @@ func TestFindOneWithoutResult(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	pr := storage.NewPetRepository(db)
+	pr := repositories.NewPetRepository(db)
 	_, err = pr.FindOne(shared.EntityID("random-id"))
 
 	assert.ErrorContains(t, err, "Pet not found")
@@ -75,7 +75,7 @@ func TestFindAllWithEmptyResult(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	pr := storage.NewPetRepository(db)
+	pr := repositories.NewPetRepository(db)
 	storedPets, err := pr.FindAll()
 
 	assert.Empty(t, storedPets)
@@ -87,9 +87,9 @@ func TestFindOneWithResults(t *testing.T) {
 	if err != nil {
 		t.Error(err.Error())
 	}
-	pets, _ := storage.SeedPets(db)
+	pets, _ := repositories.SeedPets(db)
 
-	pr := storage.NewPetRepository(db)
+	pr := repositories.NewPetRepository(db)
 	storedPets, err := pr.FindAll()
 
 	assert.Len(t, storedPets, len(pets))
@@ -101,10 +101,10 @@ func TestDelete(t *testing.T) {
 	if err != nil {
 		t.Error(err.Error())
 	}
-	pets, _ := storage.SeedPets(db)
+	pets, _ := repositories.SeedPets(db)
 	pet := pets[0]
 
-	pr := storage.NewPetRepository(db)
+	pr := repositories.NewPetRepository(db)
 	err = pr.Delete(pet.ID)
 
 	assert.NoError(t, err)
