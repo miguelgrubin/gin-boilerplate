@@ -18,9 +18,9 @@ sec:          ## Show security errors
 format:       ## Apply format to all files
 	gofmt -s -w .
 test:         ## Run all tests
-	go test ./... -v
+	go test ./pkg/... -v
 coverage:     ## Run all tests and show coverage
-	go test ./... -coverprofile=coverage.out ./...
+	go test ./pkg/... -coverprofile=coverage.out ./...
 	go tool cover -func=coverage.out
 	go tool cover -html=coverage.out
 start:        ## Run hot-reload server

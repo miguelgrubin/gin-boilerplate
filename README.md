@@ -1,13 +1,15 @@
 # Gin Boilerplate
 
-This repository contains a golang API using hexagonal architecture.
+This repository contains a golang API using simplified clean architecture.
+Using factory pattern, interfaces and dependency inversion.
 
 ## Features
 
-- Decoupled components (using Ports and Adapters)
 - Handmade Swagger documentation
-- Mocks generation using Mockery
 - Full suite of tests using Testify
+- App config using viper
+- Basic comand line interface (serve, automigrate, seed, create config, etc)
+- Linters, security scanners, live reload, debugger
 
 ## Toolkit
 
@@ -22,10 +24,9 @@ This repository contains a golang API using hexagonal architecture.
 **External tools**
 
 - [Revive](https://github.com/mgechev/revive) Some linters
-- [Secure Go](https://github.com/securego/gosec) Security Checker
-- [Mockery](https://github.com/vektra/mockery) Generate Mocks
+- [Secure Go](https://github.com/securego/gosec) Security scanner
 - [Air](https://github.com/cosmtrek/air) Live Reload
-- [Delve](https://github.com/go-delve/delve) Debug
+- [Delve](https://github.com/go-delve/delve) Debugger
 
 ## Endpoints
 

@@ -1,26 +1,23 @@
 # Dev Tools
 
-## Mockery
+## GoSec
 
-Generates mocks using your interfaces.
+Security scanner. Reads your code and checks it agains 40 security rules.
 
-### Install
+Install:
 
-`go install github.com/vektra/mockery/v2@v2.35.3`
+`go install github.com/securego/gosec/v2/cmd/gosec@latest`
 
-### Use
-
-`mockery`
+Run:
+`gosec ./...`
 
 ## Air
 
 Hot realoding. Useful when you are developing.
 
-### Install
+Install:
 
 `go install github.com/cosmtrek/air@latest`
-
-### Use
 
 Just run: `air`
 
@@ -28,10 +25,31 @@ Just run: `air`
 
 Debugger.
 
-### Install
-
+Install:
 `go install github.com/go-delve/delve/cmd/dlv@latest`
 
-### Use
+Debug test:
+`dlv test ./pkg/server_test.go`
 
-Use VSCode with launch.json given
+Debug main:
+`dlv debug ./main.go`
+
+Set breakpoint:
+`break pkg.SetupRouter`
+or
+`b pkg.SetupRouter`
+or
+`break 48`
+
+Remove breakpoint:
+`clear pkg.SetupRouter`
+
+Print vars:
+`locals`
+`p var`
+`args`
+
+Show current lines:
+`ls`
+
+You can also use VSCode with launch.json given.

@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM golang:1.21-alpine as build
+FROM golang:1.25-alpine as build
 RUN apk add --no-cache gcc g++ git openssh-client
 
 WORKDIR /src
