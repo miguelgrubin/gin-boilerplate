@@ -1,3 +1,4 @@
+// Package mocks for pet repositories.
 package mocks
 
 import (

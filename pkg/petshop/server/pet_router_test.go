@@ -21,7 +21,7 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-func createServerFixture(t *testing.T, useCases usecases.PetUseCasesInterface) *gin.Engine {
+func createServerFixture(useCases usecases.PetUseCasesInterface) *gin.Engine {
 	gin.SetMode(gin.TestMode)
 	os.Setenv("APP_ENV", "test")
 	router := gin.New()
@@ -46,7 +46,7 @@ func TestGetPets(t *testing.T) {
 	})}
 	puc := new(psMocks.MockPetUseCases)
 	puc.On("Finder", mock.AnythingOfType("usecases.PetFinderParams")).Return(pets, nil)
-	router := createServerFixture(t, puc)
+	router := createServerFixture(puc)
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/v1/pets", nil)
 	router.ServeHTTP(w, req)
@@ -63,7 +63,7 @@ func TestGetPetsWithRandomError(t *testing.T) {
 	pets := []domain.Pet{}
 	puc := new(psMocks.MockPetUseCases)
 	puc.On("Finder", mock.AnythingOfType("usecases.PetFinderParams")).Return(pets, errors.New("random error"))
-	router := createServerFixture(t, puc)
+	router := createServerFixture(puc)
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/v1/pets", nil)
 	router.ServeHTTP(w, req)
@@ -78,7 +78,7 @@ func TestGetPet(t *testing.T) {
 	})
 	puc := new(psMocks.MockPetUseCases)
 	puc.On("Showher", pet.ID).Return(pet, nil)
-	router := createServerFixture(t, puc)
+	router := createServerFixture(puc)
 	w := httptest.NewRecorder()
 	url := fmt.Sprintf("/v1/pet/%s", pet.ID.String())
 	req, _ := http.NewRequest("GET", url, nil)
@@ -93,13 +93,13 @@ func TestGetPet(t *testing.T) {
 }
 
 func TestGetPetWithNotFoundError(t *testing.T) {
-	petId := shared.EntityID("random-id")
+	petID := shared.EntityID("random-id")
 
 	puc := new(psMocks.MockPetUseCases)
-	puc.On("Showher", petId).Return(domain.Pet{}, &domain.PetNotFound{ID: petId.String()})
-	router := createServerFixture(t, puc)
+	puc.On("Showher", petID).Return(domain.Pet{}, &domain.PetNotFound{ID: petID.String()})
+	router := createServerFixture(puc)
 	w := httptest.NewRecorder()
-	url := fmt.Sprintf("/v1/pet/%s", petId.String())
+	url := fmt.Sprintf("/v1/pet/%s", petID.String())
 	req, _ := http.NewRequest("GET", url, nil)
 	router.ServeHTTP(w, req)
 
@@ -107,13 +107,13 @@ func TestGetPetWithNotFoundError(t *testing.T) {
 }
 
 func TestDeletePet(t *testing.T) {
-	petId := shared.EntityID("random-id")
+	petID := shared.EntityID("random-id")
 
 	puc := new(psMocks.MockPetUseCases)
-	puc.On("Deleter", petId).Return(nil)
-	router := createServerFixture(t, puc)
+	puc.On("Deleter", petID).Return(nil)
+	router := createServerFixture(puc)
 	w := httptest.NewRecorder()
-	url := fmt.Sprintf("/v1/pet/%s", petId.String())
+	url := fmt.Sprintf("/v1/pet/%s", petID.String())
 	req, _ := http.NewRequest("DELETE", url, nil)
 	router.ServeHTTP(w, req)
 
@@ -121,13 +121,13 @@ func TestDeletePet(t *testing.T) {
 }
 
 func TestDeletePetWithError(t *testing.T) {
-	petId := shared.EntityID("random-id")
+	petID := shared.EntityID("random-id")
 
 	puc := new(psMocks.MockPetUseCases)
-	puc.On("Deleter", petId).Return(&domain.PetNotFound{ID: petId.String()})
-	router := createServerFixture(t, puc)
+	puc.On("Deleter", petID).Return(&domain.PetNotFound{ID: petID.String()})
+	router := createServerFixture(puc)
 	w := httptest.NewRecorder()
-	url := fmt.Sprintf("/v1/pet/%s", petId.String())
+	url := fmt.Sprintf("/v1/pet/%s", petID.String())
 	req, _ := http.NewRequest("DELETE", url, nil)
 	router.ServeHTTP(w, req)
 
@@ -144,7 +144,7 @@ func TestPostPet(t *testing.T) {
 	pet := domain.NewPet(domain.CreatePetParams{Name: name, Status: status})
 	puc := new(psMocks.MockPetUseCases)
 	puc.On("Creator", mock.AnythingOfType("usecases.PetCreatorParams")).Return(pet, nil)
-	router := createServerFixture(t, puc)
+	router := createServerFixture(puc)
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("POST", "/v1/pets", bytes.NewBuffer(body))
 	router.ServeHTTP(w, req)
@@ -157,7 +157,7 @@ func TestPostPetWithRequestError(t *testing.T) {
 	invalidPayload := "{\"invalidKey\": false}"
 
 	puc := new(psMocks.MockPetUseCases)
-	router := createServerFixture(t, puc)
+	router := createServerFixture(puc)
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("POST", "/v1/pets", bytes.NewBufferString(invalidPayload))
 	router.ServeHTTP(w, req)
@@ -167,14 +167,14 @@ func TestPostPetWithRequestError(t *testing.T) {
 
 func TestPatchPet(t *testing.T) {
 	pet := domain.NewPet(domain.CreatePetParams{Name: "Pet Name", Status: "Active"})
-	petId := pet.ID
+	petID := pet.ID
 	validPayload := "{\"status\": \"sleeping\"}"
 
 	puc := new(psMocks.MockPetUseCases)
-	puc.On("Updater", petId, mock.AnythingOfType("usecases.PetUpdatersParams")).Return(domain.Pet{}, &domain.PetNotFound{ID: petId.String()})
-	router := createServerFixture(t, puc)
+	puc.On("Updater", petID, mock.AnythingOfType("usecases.PetUpdatersParams")).Return(domain.Pet{}, &domain.PetNotFound{ID: petID.String()})
+	router := createServerFixture(puc)
 	w := httptest.NewRecorder()
-	url := fmt.Sprintf("/v1/pet/%s", petId.String())
+	url := fmt.Sprintf("/v1/pet/%s", petID.String())
 	req, _ := http.NewRequest("PATCH", url, bytes.NewBufferString(validPayload))
 	router.ServeHTTP(w, req)
 
@@ -183,14 +183,14 @@ func TestPatchPet(t *testing.T) {
 
 func TestPatchPetWithNotFoundError(t *testing.T) {
 	pet := domain.NewPet(domain.CreatePetParams{Name: "Pet Name", Status: "Active"})
-	petId := pet.ID
+	petID := pet.ID
 	validPayload := "{\"status\": \"sleeping\"}"
 
 	puc := new(psMocks.MockPetUseCases)
-	puc.On("Updater", petId, mock.AnythingOfType("usecases.PetUpdatersParams")).Return(pet, nil)
-	router := createServerFixture(t, puc)
+	puc.On("Updater", petID, mock.AnythingOfType("usecases.PetUpdatersParams")).Return(pet, nil)
+	router := createServerFixture(puc)
 	w := httptest.NewRecorder()
-	url := fmt.Sprintf("/v1/pet/%s", petId.String())
+	url := fmt.Sprintf("/v1/pet/%s", petID.String())
 	req, _ := http.NewRequest("PATCH", url, bytes.NewBufferString(validPayload))
 	router.ServeHTTP(w, req)
 
@@ -198,12 +198,12 @@ func TestPatchPetWithNotFoundError(t *testing.T) {
 }
 
 func TestPatchPetWithRequestError(t *testing.T) {
-	petId := shared.EntityID("random-id")
+	petID := shared.EntityID("random-id")
 	invalidPayload := "{\"status\": false}"
 	puc := new(psMocks.MockPetUseCases)
-	router := createServerFixture(t, puc)
+	router := createServerFixture(puc)
 	w := httptest.NewRecorder()
-	url := fmt.Sprintf("/v1/pet/%s", petId.String())
+	url := fmt.Sprintf("/v1/pet/%s", petID.String())
 	req, _ := http.NewRequest("PATCH", url, bytes.NewBufferString(invalidPayload))
 	router.ServeHTTP(w, req)
 

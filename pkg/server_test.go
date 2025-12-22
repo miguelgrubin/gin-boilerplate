@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func createServerFixture(t *testing.T) *gin.Engine {
+func createServerFixture() *gin.Engine {
 	gin.SetMode(gin.TestMode)
 	os.Setenv("APP_ENV", "test")
 	router := pkg.SetupRouter()
@@ -19,7 +19,7 @@ func createServerFixture(t *testing.T) *gin.Engine {
 }
 
 func TestHealthcheck(t *testing.T) {
-	router := createServerFixture(t)
+	router := createServerFixture()
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/health", nil)
 	router.ServeHTTP(w, req)

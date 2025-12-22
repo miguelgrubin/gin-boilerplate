@@ -28,25 +28,6 @@ Using factory pattern, interfaces and dependency inversion.
 - [Air](https://github.com/cosmtrek/air) Live Reload
 - [Delve](https://github.com/go-delve/delve) Debugger
 
-## Endpoints
-
-| Method | URL                       |
-| ------ | :------------------------ |
-| GET    | /health                   |
-| POST   | /v1/pets                  |
-| GET    | /v1/pets                  |
-| GET    | /v1/pet/{petId}           |
-| PATCH  | /v1/pet/{petId}           |
-| DELETE | /v1/pet/{petId}           |
-| GET    | /v1/tags                  |
-| POST   | /v1/categories            |
-| GET    | /v1/categories            |
-| GET    | /v1/category/{categoryId} |
-| DELETE | /v1/category/{categoryId} |
-| POST   | /v1/orders                |
-| GET    | /v1/orders                |
-| GET    | /v1/order/{orderId}       |
-
 ## CLI Usage
 
 - app

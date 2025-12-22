@@ -28,14 +28,6 @@ func (pc *PetShopController) PetCreateHandler(c *gin.Context) {
 	c.JSON(http.StatusCreated, PetReponseFromDomain(pet))
 }
 
-// PetListHandler godoc
-// @Summary      List all pets
-// @Description  get string by ID
-// @Tags         pets
-// @Accept       json
-// @Produce      json
-// @Success      200  {array}  PetResponse
-// @Router       /pets [get]
 func (pc *PetShopController) PetListHandler(c *gin.Context) {
 	pets, err := pc.UseCases.Pet.Finder(usecases.PetFinderParams{})
 
