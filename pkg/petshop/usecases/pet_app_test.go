@@ -125,6 +125,23 @@ func TestPetUpdaterWithUnexistantPet(t *testing.T) {
 	assert.ErrorContains(t, err, pet.ID.String())
 }
 
+func TestPetUpdaterWithSaveError(t *testing.T) {
+	newName := "New Name"
+	pet := domain.NewPet(domain.CreatePetParams{
+		Name:   "Piggie",
+		Status: "Active",
+	})
+	pr := new(psMocks.MockPetRepository)
+	pr.On("FindOne", pet.ID).Return(&pet, nil)
+	pr.On("Save", mock.AnythingOfType("domain.Pet")).Return(errors.New("generic error from repository"))
+
+	useCases := usecases.NewPetUseCases(pr)
+	_, err := useCases.Updater(pet.ID, usecases.PetUpdatersParams{Name: &newName})
+
+	pr.AssertExpectations(t)
+	assert.ErrorContains(t, err, "error from repository")
+}
+
 func TestPetDeleterWithExistantPet(t *testing.T) {
 	pet := domain.NewPet(domain.CreatePetParams{
 		Name:   "Piggie",
