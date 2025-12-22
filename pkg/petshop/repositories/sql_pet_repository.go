@@ -2,7 +2,6 @@ package repositories
 
 import (
 	"errors"
-	"log"
 
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/domain"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/shared"
@@ -26,23 +25,19 @@ func (r SQLPetRepository) Save(pet domain.Pet) error {
 	err = r.db.First(&prev, "id = ?", pet.ID.String()).Error
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		err = r.db.Debug().Create(PetEntityFromDomain(pet)).Error
-		if err != nil {
-			log.Println(err.Error())
-			return err
-		}
-		return nil
+		err = r.db.Create(PetEntityFromDomain(pet)).Error
+		return err
 	}
 
-	err = r.db.Debug().Save(PetEntityFromDomain(pet)).Error
+	err = r.db.Save(PetEntityFromDomain(pet)).Error
 	return err
 }
 
 func (r SQLPetRepository) FindOne(id shared.EntityID) (*domain.Pet, error) {
 	var pet PetEntity
-	err := r.db.Debug().Where("id = ?", id).Take(&pet).Error
+	err := r.db.Where("id = ?", id).Take(&pet).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return nil, &domain.PetNotFound{ID: id.String()}
+		err = &domain.PetNotFound{ID: id.String()}
 	}
 	if err != nil {
 		return nil, err
@@ -53,24 +48,18 @@ func (r SQLPetRepository) FindOne(id shared.EntityID) (*domain.Pet, error) {
 
 func (r SQLPetRepository) FindAll() ([]domain.Pet, error) {
 	var pets []PetEntity
-	err := r.db.Debug().Find(&pets).Error
-	if err != nil {
-		return nil, err
-	}
+	err := r.db.Find(&pets).Error
 	domainPets := make([]domain.Pet, len(pets))
 	for i, v := range pets {
 		domainPets[i] = PetEntityToDomain(v)
 	}
-	return domainPets, nil
+	return domainPets, err
 }
 
 func (r SQLPetRepository) Delete(id shared.EntityID) error {
 	var pet PetEntity
-	err := r.db.Debug().Where("id = ?", id).Delete(&pet).Error
-	if err != nil {
-		return errors.New("database error, please try again")
-	}
-	return nil
+	err := r.db.Where("id = ?", id).Delete(&pet).Error
+	return err
 }
 
 func Automigrate(db *gorm.DB) error {
