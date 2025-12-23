@@ -31,7 +31,8 @@ tmp/
 
 coverage
 coverage.out
+coverage.out.tmp
 coverage.html
 
 database.db
-test/database.db
+test/*.db

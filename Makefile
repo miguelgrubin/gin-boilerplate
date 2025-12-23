@@ -20,9 +20,7 @@ format:       ## Apply format to all files
 test:         ## Run all tests
 	go test ./pkg/... -v
 coverage:     ## Run all tests and show coverage
-	go test ./pkg/... -coverprofile=coverage.out ./pkg/...
-	go tool cover -func=coverage.out
-	go tool cover -html=coverage.out
+	./scripts/coverage.sh
 start:        ## Run hot-reload server
 	air
 debug:        ## Run server on debug mode
