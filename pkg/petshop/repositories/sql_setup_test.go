@@ -9,7 +9,7 @@ import (
 
 	"github.com/miguelgrubin/gin-boilerplate/pkg"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/repositories"
-	"github.com/miguelgrubin/gin-boilerplate/pkg/shared/storage"
+	"github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule"
 	"gorm.io/gorm"
 )
 
@@ -35,7 +35,7 @@ func LocalDatabase() (*gorm.DB, error) {
 		return nil, err
 	}
 
-	db := storage.NewDbConnection(appConfig.Database.Driver, appConfig.Database.Address)
+	db := sharedmodule.NewDbConnection(appConfig.Database.Driver, appConfig.Database.Address)
 
 	err = db.Migrator().DropTable(&repositories.PetEntity{})
 	if err != nil {

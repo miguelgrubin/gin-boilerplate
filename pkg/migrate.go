@@ -4,34 +4,30 @@ import (
 	"log"
 
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/repositories"
-	"github.com/miguelgrubin/gin-boilerplate/pkg/shared/storage"
+	"github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule"
 )
 
 /* MigrateAll runs all DB migrations */
-func MigrateAll() {
+func MigrateAll() error {
 	config, err := ReadConfig()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	db := storage.NewDbConnection(config.Database.Driver, config.Database.Address)
+	db := sharedmodule.NewDbConnection(config.Database.Driver, config.Database.Address)
 
 	err = repositories.Automigrate(db)
-	if err != nil {
-		log.Print(err)
-	}
+	return err
 }
 
-func SeedAll() {
+func SeedAll() error {
 	config, err := ReadConfig()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	db := storage.NewDbConnection(config.Database.Driver, config.Database.Address)
+	db := sharedmodule.NewDbConnection(config.Database.Driver, config.Database.Address)
 
 	_, err = repositories.SeedPets(db)
-	if err != nil {
-		log.Fatal(err)
-	}
+	return err
 }

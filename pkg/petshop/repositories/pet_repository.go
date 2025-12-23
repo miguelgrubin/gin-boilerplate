@@ -2,12 +2,12 @@ package repositories
 
 import (
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/domain"
-	"github.com/miguelgrubin/gin-boilerplate/pkg/shared"
+	"github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule"
 )
 
 type PetRepository interface {
-	FindOne(shared.EntityID) (*domain.Pet, error)
+	FindOne(sharedmodule.EntityID) (*domain.Pet, error)
 	FindAll() ([]domain.Pet, error)
 	Save(domain.Pet) error
-	Delete(shared.EntityID) error
+	Delete(sharedmodule.EntityID) error
 }

@@ -7,7 +7,7 @@ import (
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/domain"
 	psMocks "github.com/miguelgrubin/gin-boilerplate/pkg/petshop/mocks"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/usecases"
-	"github.com/miguelgrubin/gin-boilerplate/pkg/shared"
+	"github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -21,7 +21,7 @@ func TestPetShowerWhenHasResult(t *testing.T) {
 	pr.On("FindOne", pet.ID).Return(&pet, nil)
 	useCases := usecases.NewPetUseCases(pr)
 
-	result, _ := useCases.Showher(shared.EntityID(pet.ID))
+	result, _ := useCases.Showher(sharedmodule.EntityID(pet.ID))
 
 	pr.AssertExpectations(t)
 	assert.Equal(t, result, pet)
@@ -39,7 +39,7 @@ func TestPetShowerWhenHasNotResult(t *testing.T) {
 	useCases := usecases.NewPetUseCases(pr)
 	domainErr := &domain.PetNotFound{ID: pet.ID.String()}
 
-	_, err := useCases.Showher(shared.EntityID(pet.ID))
+	_, err := useCases.Showher(sharedmodule.EntityID(pet.ID))
 	pr.AssertExpectations(t)
 	assert.Equal(t, err, domainErr)
 }

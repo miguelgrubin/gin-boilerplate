@@ -1,5 +1,6 @@
-// Package storage provides common services such as database connections, auth, etc.
-package storage
+// Package sharedmodule provides common services, custom types and domain definitions used in other modules.
+
+package sharedmodule
 
 import (
 	"gorm.io/driver/mysql"
@@ -13,14 +14,6 @@ func NewDbConnection(Dbdriver, DBURL string) *gorm.DB {
 	if Dbdriver == "sqlite3" {
 		var err error
 		db, err = gorm.Open(sqlite.Open(DBURL), &gorm.Config{})
-		if err != nil {
-			panic("failed to connect database")
-		}
-	}
-
-	if Dbdriver == "mysql" {
-		var err error
-		db, err = gorm.Open(mysql.Open(DBURL), &gorm.Config{})
 		if err != nil {
 			panic("failed to connect database")
 		}

@@ -5,7 +5,7 @@ import (
 
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/domain"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/repositories"
-	"github.com/miguelgrubin/gin-boilerplate/pkg/shared"
+	"github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -63,7 +63,7 @@ func TestFindOneWithoutResult(t *testing.T) {
 	}
 
 	pr := repositories.NewPetRepository(db)
-	_, err = pr.FindOne(shared.EntityID("random-id"))
+	_, err = pr.FindOne(sharedmodule.EntityID("random-id"))
 
 	assert.ErrorContains(t, err, "Pet not found")
 	assert.Contains(t, err.Error(), "random-id")

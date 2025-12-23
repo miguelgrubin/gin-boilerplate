@@ -3,7 +3,7 @@ package mocks
 import (
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/domain"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/usecases"
-	"github.com/miguelgrubin/gin-boilerplate/pkg/shared"
+	"github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule"
 	"github.com/stretchr/testify/mock"
 )
 
@@ -21,17 +21,17 @@ func (m *MockPetUseCases) Finder(params usecases.PetFinderParams) ([]domain.Pet,
 	return args.Get(0).([]domain.Pet), args.Error(1)
 }
 
-func (m *MockPetUseCases) Showher(id shared.EntityID) (domain.Pet, error) {
+func (m *MockPetUseCases) Showher(id sharedmodule.EntityID) (domain.Pet, error) {
 	args := m.Called(id)
 	return args.Get(0).(domain.Pet), args.Error(1)
 }
 
-func (m *MockPetUseCases) Updater(id shared.EntityID, params usecases.PetUpdatersParams) (domain.Pet, error) {
+func (m *MockPetUseCases) Updater(id sharedmodule.EntityID, params usecases.PetUpdatersParams) (domain.Pet, error) {
 	args := m.Called(id, params)
 	return args.Get(0).(domain.Pet), args.Error(1)
 }
 
-func (m *MockPetUseCases) Deleter(id shared.EntityID) error {
+func (m *MockPetUseCases) Deleter(id sharedmodule.EntityID) error {
 	args := m.Called(id)
 	return args.Error(0)
 }

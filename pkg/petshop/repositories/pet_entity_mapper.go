@@ -4,17 +4,17 @@ import (
 	"time"
 
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/domain"
-	"github.com/miguelgrubin/gin-boilerplate/pkg/shared"
+	"github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule"
 )
 
 func PetEntityToDomain(pe PetEntity) domain.Pet {
 	return domain.Pet{
-		ID:        shared.EntityID(pe.ID),
+		ID:        sharedmodule.EntityID(pe.ID),
 		Name:      pe.Name,
 		Status:    pe.Status,
-		CreatedAt: shared.DateTime(pe.CreatedAt),
-		UpdatedAt: shared.DateTime(pe.UpdatedAt),
-		DeletedAt: (*shared.DateTime)(pe.DeletedAt),
+		CreatedAt: sharedmodule.DateTime(pe.CreatedAt),
+		UpdatedAt: sharedmodule.DateTime(pe.UpdatedAt),
+		DeletedAt: (*sharedmodule.DateTime)(pe.DeletedAt),
 	}
 }
 

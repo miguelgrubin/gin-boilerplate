@@ -1,5 +1,4 @@
-// Package domain provides domain definition of shared contexts.
-package domain
+package sharedmodule
 
 import "time"
 

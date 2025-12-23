@@ -16,7 +16,7 @@ import (
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/repositories"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/server"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/usecases"
-	"github.com/miguelgrubin/gin-boilerplate/pkg/shared"
+	"github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -93,7 +93,7 @@ func TestGetPet(t *testing.T) {
 }
 
 func TestGetPetWithNotFoundError(t *testing.T) {
-	petID := shared.EntityID("random-id")
+	petID := sharedmodule.EntityID("random-id")
 
 	puc := new(psMocks.MockPetUseCases)
 	puc.On("Showher", petID).Return(domain.Pet{}, &domain.PetNotFound{ID: petID.String()})
@@ -107,7 +107,7 @@ func TestGetPetWithNotFoundError(t *testing.T) {
 }
 
 func TestDeletePet(t *testing.T) {
-	petID := shared.EntityID("random-id")
+	petID := sharedmodule.EntityID("random-id")
 
 	puc := new(psMocks.MockPetUseCases)
 	puc.On("Deleter", petID).Return(nil)
@@ -121,7 +121,7 @@ func TestDeletePet(t *testing.T) {
 }
 
 func TestDeletePetWithError(t *testing.T) {
-	petID := shared.EntityID("random-id")
+	petID := sharedmodule.EntityID("random-id")
 
 	puc := new(psMocks.MockPetUseCases)
 	puc.On("Deleter", petID).Return(&domain.PetNotFound{ID: petID.String()})
@@ -198,7 +198,7 @@ func TestPatchPetWithNotFoundError(t *testing.T) {
 }
 
 func TestPatchPetWithRequestError(t *testing.T) {
-	petID := shared.EntityID("random-id")
+	petID := sharedmodule.EntityID("random-id")
 	invalidPayload := "{\"status\": false}"
 	puc := new(psMocks.MockPetUseCases)
 	router := createServerFixture(puc)

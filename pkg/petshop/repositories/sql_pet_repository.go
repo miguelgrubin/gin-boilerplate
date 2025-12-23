@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/domain"
-	"github.com/miguelgrubin/gin-boilerplate/pkg/shared"
+	"github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule"
 	"gorm.io/gorm"
 )
 
@@ -33,7 +33,7 @@ func (r SQLPetRepository) Save(pet domain.Pet) error {
 	return err
 }
 
-func (r SQLPetRepository) FindOne(id shared.EntityID) (*domain.Pet, error) {
+func (r SQLPetRepository) FindOne(id sharedmodule.EntityID) (*domain.Pet, error) {
 	var pet PetEntity
 	err := r.db.Where("id = ?", id).Take(&pet).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -56,7 +56,7 @@ func (r SQLPetRepository) FindAll() ([]domain.Pet, error) {
 	return domainPets, err
 }
 
-func (r SQLPetRepository) Delete(id shared.EntityID) error {
+func (r SQLPetRepository) Delete(id sharedmodule.EntityID) error {
 	var pet PetEntity
 	err := r.db.Where("id = ?", id).Delete(&pet).Error
 	return err

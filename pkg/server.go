@@ -7,7 +7,7 @@ import (
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/repositories"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/server"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/usecases"
-	"github.com/miguelgrubin/gin-boilerplate/pkg/shared/storage"
+	"github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule"
 	"github.com/spf13/viper"
 )
 
@@ -39,7 +39,7 @@ func SetupRouter() *gin.Engine {
 
 /* NewServices inyects services on modules (petshop) */
 func NewServices(r *gin.RouterGroup) {
-	db := storage.NewDbConnection(
+	db := sharedmodule.NewDbConnection(
 		viper.GetString("database.driver"),
 		viper.GetString("database.address"),
 	)

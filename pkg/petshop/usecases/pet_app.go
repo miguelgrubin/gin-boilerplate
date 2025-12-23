@@ -4,7 +4,7 @@ package usecases
 import (
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/domain"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/repositories"
-	"github.com/miguelgrubin/gin-boilerplate/pkg/shared"
+	"github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule"
 )
 
 type PetUseCases struct {
@@ -28,9 +28,9 @@ type PetUpdatersParams struct {
 type PetUseCasesInterface interface {
 	Creator(PetCreatorParams) (domain.Pet, error)
 	Finder(PetFinderParams) ([]domain.Pet, error)
-	Showher(shared.EntityID) (domain.Pet, error)
-	Updater(shared.EntityID, PetUpdatersParams) (domain.Pet, error)
-	Deleter(shared.EntityID) error
+	Showher(sharedmodule.EntityID) (domain.Pet, error)
+	Updater(sharedmodule.EntityID, PetUpdatersParams) (domain.Pet, error)
+	Deleter(sharedmodule.EntityID) error
 }
 
 func NewPetUseCases(pr repositories.PetRepository) PetUseCases {
@@ -50,7 +50,7 @@ func (p *PetUseCases) Finder(_ PetFinderParams) ([]domain.Pet, error) {
 	return p.pr.FindAll()
 }
 
-func (p *PetUseCases) Showher(petID shared.EntityID) (domain.Pet, error) {
+func (p *PetUseCases) Showher(petID sharedmodule.EntityID) (domain.Pet, error) {
 	pet, err := p.pr.FindOne(petID)
 	if err != nil {
 		return domain.Pet{}, &domain.PetNotFound{ID: petID.String()}
@@ -58,7 +58,7 @@ func (p *PetUseCases) Showher(petID shared.EntityID) (domain.Pet, error) {
 	return *pet, nil
 }
 
-func (p *PetUseCases) Updater(petID shared.EntityID, payload PetUpdatersParams) (domain.Pet, error) {
+func (p *PetUseCases) Updater(petID sharedmodule.EntityID, payload PetUpdatersParams) (domain.Pet, error) {
 	pet, err := p.pr.FindOne(petID)
 	if err != nil {
 		return domain.Pet{}, &domain.PetNotFound{ID: petID.String()}
@@ -73,7 +73,7 @@ func (p *PetUseCases) Updater(petID shared.EntityID, payload PetUpdatersParams) 
 	return *pet, nil
 }
 
-func (p *PetUseCases) Deleter(petID shared.EntityID) error {
+func (p *PetUseCases) Deleter(petID sharedmodule.EntityID) error {
 	_, err := p.pr.FindOne(petID)
 	if err != nil {
 		return &domain.PetNotFound{ID: petID.String()}

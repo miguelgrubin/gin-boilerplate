@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"log"
+
 	"github.com/miguelgrubin/gin-boilerplate/pkg"
 	"github.com/spf13/cobra"
 )
@@ -16,7 +18,11 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(_ *cobra.Command, _ []string) {
-		pkg.MigrateAll()
+		err := pkg.MigrateAll()
+		if err != nil {
+			log.Println("Error applying migration:")
+			log.Fatal(err)
+		}
 	},
 }
 
