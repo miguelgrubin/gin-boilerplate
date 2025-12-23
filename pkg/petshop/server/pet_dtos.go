@@ -21,7 +21,7 @@ type PetUpdateRequest struct {
 }
 
 func PetReponseFromDomain(p domain.Pet) PetResponse {
-	return PetResponse{p.ID.String(), p.Name, p.Status, p.CreatedAt.Time().String(), p.UpdatedAt.Time().String()}
+	return PetResponse{p.ID, p.Name, p.Status, p.CreatedAt.String(), p.UpdatedAt.String()}
 }
 
 func PetResponseListFromDomain(p []domain.Pet) []PetResponse {

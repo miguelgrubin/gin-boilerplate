@@ -5,7 +5,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/usecases"
-	"github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule"
 )
 
 // PetCreateRequest is the request payload for creating a new pet
@@ -39,7 +38,7 @@ func (pc *PetShopController) PetListHandler(c *gin.Context) {
 }
 
 func (pc *PetShopController) PetShowHandler(c *gin.Context) {
-	petID := sharedmodule.EntityID(c.Param("id"))
+	petID := c.Param("id")
 	pet, err := pc.UseCases.Pet.Showher(petID)
 
 	if err != nil {
@@ -50,7 +49,7 @@ func (pc *PetShopController) PetShowHandler(c *gin.Context) {
 }
 
 func (pc *PetShopController) PetUpdateHandler(c *gin.Context) {
-	petID := sharedmodule.EntityID(c.Param("id"))
+	petID := c.Param("id")
 	var petParams PetUpdateRequest
 	if err := c.ShouldBindJSON(&petParams); err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
@@ -68,7 +67,7 @@ func (pc *PetShopController) PetUpdateHandler(c *gin.Context) {
 }
 
 func (pc *PetShopController) PetDeleteHandler(c *gin.Context) {
-	petID := sharedmodule.EntityID(c.Param("id"))
+	petID := c.Param("id")
 	err := pc.UseCases.Pet.Deleter(petID)
 
 	if err != nil {

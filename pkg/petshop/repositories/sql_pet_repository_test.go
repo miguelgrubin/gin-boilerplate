@@ -5,7 +5,6 @@ import (
 
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/domain"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/repositories"
-	"github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -20,7 +19,7 @@ func TestSaveWithNewPet(t *testing.T) {
 	err = pr.Save(pet)
 
 	storedPet, _ := pr.FindOne(pet.ID)
-	assert.Equal(t, pet.ID.String(), storedPet.ID.String())
+	assert.Equal(t, pet.ID, storedPet.ID)
 	assert.NoError(t, err)
 }
 
@@ -63,7 +62,7 @@ func TestFindOneWithoutResult(t *testing.T) {
 	}
 
 	pr := repositories.NewPetRepository(db)
-	_, err = pr.FindOne(sharedmodule.EntityID("random-id"))
+	_, err = pr.FindOne("random-id")
 
 	assert.ErrorContains(t, err, "Pet not found")
 	assert.Contains(t, err.Error(), "random-id")

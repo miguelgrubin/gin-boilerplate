@@ -13,12 +13,12 @@ const (
 )
 
 type Pet struct {
-	ID            sharedmodule.EntityID
+	ID            string
 	Name          string
 	Status        string
-	CreatedAt     sharedmodule.DateTime
-	UpdatedAt     sharedmodule.DateTime
-	DeletedAt     *sharedmodule.DateTime
+	CreatedAt     time.Time
+	UpdatedAt     time.Time
+	DeletedAt     *time.Time
 	eventRegistry *sharedmodule.EventRegistry
 }
 
@@ -41,18 +41,18 @@ func (p *Pet) Update(payload UpdatePetParams) {
 	if payload.Status != nil {
 		p.Status = *payload.Status
 	}
-	p.UpdatedAt = sharedmodule.DateTime(time.Now())
+	p.UpdatedAt = time.Now()
 	p.eventRegistry.AddEvent(PetUpdated)
 }
 
 func NewPet(payload CreatePetParams) Pet {
 	id := uuid.New().String()
 	pet := Pet{
-		ID:            sharedmodule.EntityID(id),
+		ID:            id,
 		Name:          payload.Name,
 		Status:        payload.Status,
-		UpdatedAt:     sharedmodule.DateTime(time.Now()),
-		CreatedAt:     sharedmodule.DateTime(time.Now()),
+		UpdatedAt:     time.Now(),
+		CreatedAt:     time.Now(),
 		DeletedAt:     nil,
 		eventRegistry: sharedmodule.NewEventRegistry(),
 	}

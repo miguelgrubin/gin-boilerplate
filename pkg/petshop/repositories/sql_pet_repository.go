@@ -4,7 +4,6 @@ import (
 	"errors"
 
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/domain"
-	"github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule"
 	"gorm.io/gorm"
 )
 
@@ -22,7 +21,7 @@ var _ PetRepository = &SQLPetRepository{}
 func (r SQLPetRepository) Save(pet domain.Pet) error {
 	var err error
 	var prev PetEntity
-	err = r.db.First(&prev, "id = ?", pet.ID.String()).Error
+	err = r.db.First(&prev, "id = ?", pet.ID).Error
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		err = r.db.Create(PetEntityFromDomain(pet)).Error
@@ -33,11 +32,11 @@ func (r SQLPetRepository) Save(pet domain.Pet) error {
 	return err
 }
 
-func (r SQLPetRepository) FindOne(id sharedmodule.EntityID) (*domain.Pet, error) {
+func (r SQLPetRepository) FindOne(id string) (*domain.Pet, error) {
 	var pet PetEntity
 	err := r.db.Where("id = ?", id).Take(&pet).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		err = &domain.PetNotFound{ID: id.String()}
+		err = &domain.PetNotFound{ID: id}
 	}
 	if err != nil {
 		return nil, err
@@ -56,7 +55,7 @@ func (r SQLPetRepository) FindAll() ([]domain.Pet, error) {
 	return domainPets, err
 }
 
-func (r SQLPetRepository) Delete(id sharedmodule.EntityID) error {
+func (r SQLPetRepository) Delete(id string) error {
 	var pet PetEntity
 	err := r.db.Where("id = ?", id).Delete(&pet).Error
 	return err

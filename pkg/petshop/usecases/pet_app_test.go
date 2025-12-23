@@ -7,7 +7,6 @@ import (
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/domain"
 	psMocks "github.com/miguelgrubin/gin-boilerplate/pkg/petshop/mocks"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/usecases"
-	"github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -21,7 +20,7 @@ func TestPetShowerWhenHasResult(t *testing.T) {
 	pr.On("FindOne", pet.ID).Return(&pet, nil)
 	useCases := usecases.NewPetUseCases(pr)
 
-	result, _ := useCases.Showher(sharedmodule.EntityID(pet.ID))
+	result, _ := useCases.Showher(pet.ID)
 
 	pr.AssertExpectations(t)
 	assert.Equal(t, result, pet)
@@ -37,9 +36,9 @@ func TestPetShowerWhenHasNotResult(t *testing.T) {
 	pr := new(psMocks.MockPetRepository)
 	pr.On("FindOne", pet.ID).Return(nil, prError)
 	useCases := usecases.NewPetUseCases(pr)
-	domainErr := &domain.PetNotFound{ID: pet.ID.String()}
+	domainErr := &domain.PetNotFound{ID: pet.ID}
 
-	_, err := useCases.Showher(sharedmodule.EntityID(pet.ID))
+	_, err := useCases.Showher(pet.ID)
 	pr.AssertExpectations(t)
 	assert.Equal(t, err, domainErr)
 }
@@ -116,13 +115,13 @@ func TestPetUpdaterWithUnexistantPet(t *testing.T) {
 		Status: "Active",
 	})
 	pr := new(psMocks.MockPetRepository)
-	pr.On("FindOne", pet.ID).Return(&domain.Pet{}, &domain.PetNotFound{ID: pet.ID.String()})
+	pr.On("FindOne", pet.ID).Return(&domain.Pet{}, &domain.PetNotFound{ID: pet.ID})
 
 	useCases := usecases.NewPetUseCases(pr)
 	_, err := useCases.Updater(pet.ID, usecases.PetUpdatersParams{Name: &newName})
 
 	pr.AssertExpectations(t)
-	assert.ErrorContains(t, err, pet.ID.String())
+	assert.ErrorContains(t, err, pet.ID)
 }
 
 func TestPetUpdaterWithSaveError(t *testing.T) {
@@ -164,11 +163,11 @@ func TestPetDeleterWithUnexistantPet(t *testing.T) {
 		Status: "Active",
 	})
 	pr := new(psMocks.MockPetRepository)
-	pr.On("FindOne", pet.ID).Return(&domain.Pet{}, &domain.PetNotFound{ID: pet.ID.String()})
+	pr.On("FindOne", pet.ID).Return(&domain.Pet{}, &domain.PetNotFound{ID: pet.ID})
 
 	useCases := usecases.NewPetUseCases(pr)
 	err := useCases.Deleter(pet.ID)
 
 	pr.AssertExpectations(t)
-	assert.ErrorContains(t, err, pet.ID.String())
+	assert.ErrorContains(t, err, pet.ID)
 }
