@@ -7,15 +7,25 @@ import (
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/usecases"
 )
 
+type PetShopHandlers struct {
+	usecases usecases.PetShopUseCases
+}
+
+func NewPetShopHandlers(u usecases.PetShopUseCases) PetShopHandlers {
+	return PetShopHandlers{
+		usecases: u,
+	}
+}
+
 // PetCreateRequest is the request payload for creating a new pet
-func (pc *PetShopController) PetCreateHandler(c *gin.Context) {
+func (ph *PetShopHandlers) PetCreateHandler(c *gin.Context) {
 	var petParams PetCreateRequest
 	if err := c.ShouldBindJSON(&petParams); err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
 
-	pet, err := pc.UseCases.Pet.Creator(usecases.PetCreatorParams{
+	pet, err := ph.usecases.Pet.Creator(usecases.PetCreatorParams{
 		Name:   petParams.Name,
 		Status: petParams.Status,
 	})
@@ -27,8 +37,8 @@ func (pc *PetShopController) PetCreateHandler(c *gin.Context) {
 	c.JSON(http.StatusCreated, PetReponseFromDomain(pet))
 }
 
-func (pc *PetShopController) PetListHandler(c *gin.Context) {
-	pets, err := pc.UseCases.Pet.Finder(usecases.PetFinderParams{})
+func (ph *PetShopHandlers) PetListHandler(c *gin.Context) {
+	pets, err := ph.usecases.Pet.Finder(usecases.PetFinderParams{})
 
 	if err != nil {
 		handleError(c, err)
@@ -37,9 +47,9 @@ func (pc *PetShopController) PetListHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, PetResponseListFromDomain(pets))
 }
 
-func (pc *PetShopController) PetShowHandler(c *gin.Context) {
+func (ph *PetShopHandlers) PetShowHandler(c *gin.Context) {
 	petID := c.Param("id")
-	pet, err := pc.UseCases.Pet.Showher(petID)
+	pet, err := ph.usecases.Pet.Showher(petID)
 
 	if err != nil {
 		handleError(c, err)
@@ -48,7 +58,7 @@ func (pc *PetShopController) PetShowHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, PetReponseFromDomain(pet))
 }
 
-func (pc *PetShopController) PetUpdateHandler(c *gin.Context) {
+func (ph *PetShopHandlers) PetUpdateHandler(c *gin.Context) {
 	petID := c.Param("id")
 	var petParams PetUpdateRequest
 	if err := c.ShouldBindJSON(&petParams); err != nil {
@@ -57,7 +67,7 @@ func (pc *PetShopController) PetUpdateHandler(c *gin.Context) {
 	}
 
 	payload := (usecases.PetUpdatersParams)(petParams)
-	pet, err := pc.UseCases.Pet.Updater(petID, payload)
+	pet, err := ph.usecases.Pet.Updater(petID, payload)
 
 	if err != nil {
 		handleError(c, err)
@@ -66,13 +76,23 @@ func (pc *PetShopController) PetUpdateHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, PetReponseFromDomain(pet))
 }
 
-func (pc *PetShopController) PetDeleteHandler(c *gin.Context) {
+func (ph *PetShopHandlers) PetDeleteHandler(c *gin.Context) {
 	petID := c.Param("id")
-	err := pc.UseCases.Pet.Deleter(petID)
+	err := ph.usecases.Pet.Deleter(petID)
 
 	if err != nil {
 		handleError(c, err)
 		return
 	}
 	c.JSON(http.StatusNoContent, nil)
+}
+
+func (ph *PetShopHandlers) SetupRoutes(r *gin.RouterGroup) {
+	{
+		r.POST("/pets", ph.PetCreateHandler)
+		r.GET("/pets", ph.PetListHandler)
+		r.GET("/pet/:id", ph.PetShowHandler)
+		r.PATCH("/pet/:id", ph.PetUpdateHandler)
+		r.DELETE("/pet/:id", ph.PetDeleteHandler)
+	}
 }

@@ -13,7 +13,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/domain"
 	psMocks "github.com/miguelgrubin/gin-boilerplate/pkg/petshop/mocks"
-	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/repositories"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/server"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/usecases"
 	"github.com/stretchr/testify/assert"
@@ -27,13 +26,10 @@ func createServerFixture(useCases usecases.PetUseCasesInterface) *gin.Engine {
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
 	v1 := router.Group("/v1")
-	petShopRepositories := repositories.PetShopRepositories{
-		Pet: new(psMocks.MockPetRepository),
-	}
 	petShopUseCases := usecases.PetShopUseCases{
 		Pet: useCases,
 	}
-	pc := server.NewPetShopController(petShopRepositories, petShopUseCases)
+	pc := server.NewPetShopHandlers(petShopUseCases)
 	pc.SetupRoutes(v1)
 	return router
 }

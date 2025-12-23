@@ -3,7 +3,7 @@ package pkg
 import (
 	"log"
 
-	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/repositories"
+	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule"
 )
 
@@ -16,7 +16,8 @@ func MigrateAll() error {
 
 	db := sharedmodule.NewDbConnection(config.Database.Driver, config.Database.Address)
 
-	err = repositories.Automigrate(db)
+	ps := petshop.NewPetShopModule(db)
+	err = ps.Automigrate(db)
 	return err
 }
 
@@ -28,6 +29,7 @@ func SeedAll() error {
 
 	db := sharedmodule.NewDbConnection(config.Database.Driver, config.Database.Address)
 
-	_, err = repositories.SeedPets(db)
+	ps := petshop.NewPetShopModule(db)
+	err = ps.Seed(db)
 	return err
 }
