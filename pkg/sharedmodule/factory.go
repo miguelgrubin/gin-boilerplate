@@ -1,3 +1,4 @@
+// Package sharedmodule provides shared services, domains and errors.
 package sharedmodule
 
 import "github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule/services"

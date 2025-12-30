@@ -14,7 +14,12 @@ var migrateCmd = &cobra.Command{
 	Long: `Migrates the database to the latest version. This command applies all pending migrations
 to ensure the database schema is up to date.`,
 	Run: func(_ *cobra.Command, _ []string) {
-		err := pkg.MigrateAll()
+		app, err := pkg.NewApp()
+		if err != nil {
+			log.Println("Error creating app:")
+			log.Fatal(err)
+		}
+		err = app.Migrate()
 		if err != nil {
 			log.Println("Error applying migration:")
 			log.Fatal(err)

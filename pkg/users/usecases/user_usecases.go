@@ -120,7 +120,7 @@ func (p *UserUseCases) RefreshToken(refreshToken string) (string, string, error)
 		return "", "", &sd.InvalidRefreshToken{}
 	}
 
-	user, err := p.ur.FindOne(data.UserId)
+	user, err := p.ur.FindOne(data.UserID)
 	if err != nil {
 		return "", "", &sd.InvalidRefreshToken{}
 	}

@@ -10,14 +10,14 @@ import (
 
 type JWTData struct {
 	Jti    string `json:"jti"`
-	UserId string `json:"user_id"`
+	UserID string `json:"user_id"`
 	Role   string `json:"role"`
 }
 
 type JWTService interface {
-	GenerateTokens(userId string, role string) (string, string)
+	GenerateTokens(userID string, role string) (string, string)
 	ValidateToken(token string) bool
-	RefreshToken(token string, userId string, role string) (string, string, error)
+	RefreshToken(token string, userID string, role string) (string, string, error)
 	DecodeToken(token string) (JWTData, error)
 	InvalidateToken(token string) error
 }
@@ -36,12 +36,12 @@ func NewJWTServiceRSA(rs RedisServiceInterface, c JwtConfig) *JWTServiceRSA {
 	}
 }
 
-func (js *JWTServiceRSA) GenerateTokens(userId string, role string) (string, string) {
+func (js *JWTServiceRSA) GenerateTokens(userID string, role string) (string, string) {
 	refreshJti := uuid.New().String()
 
 	token := jwt.NewWithClaims(jwt.SigningMethodRS256, jwt.MapClaims{
 		"jti":     refreshJti,
-		"user_id": userId,
+		"user_id": userID,
 		"role":    role,
 		"iat":     time.Now().Unix(),
 		"exp":     time.Now().Add(time.Minute * time.Duration(js.config.Exp)).Unix(),
@@ -50,14 +50,14 @@ func (js *JWTServiceRSA) GenerateTokens(userId string, role string) (string, str
 
 	refreshToken := jwt.NewWithClaims(jwt.SigningMethodRS256, jwt.MapClaims{
 		"jti":     refreshJti,
-		"user_id": userId,
+		"user_id": userID,
 		"role":    role,
 		"iat":     time.Now().Unix(),
 		"exp":     time.Now().Add(time.Minute * time.Duration(js.config.ExpRefresh)).Unix(),
 	})
 	refreshTokenString, _ := refreshToken.SignedString([]byte(js.config.Keys.Private))
 
-	js.redisService.Set(refreshJti, userId, time.Minute*time.Duration(js.config.ExpRefresh))
+	js.redisService.Set(refreshJti, userID, time.Minute*time.Duration(js.config.ExpRefresh))
 	return tokenString, refreshTokenString
 }
 
@@ -69,7 +69,7 @@ func (js *JWTServiceRSA) ValidateToken(tokenString string) bool {
 	return true
 }
 
-func (js *JWTServiceRSA) RefreshToken(tokenString string, userId string, role string) (string, string, error) {
+func (js *JWTServiceRSA) RefreshToken(tokenString string, userID string, role string) (string, string, error) {
 	data, err := js.DecodeToken(tokenString)
 
 	if err != nil {
@@ -86,18 +86,18 @@ func (js *JWTServiceRSA) RefreshToken(tokenString string, userId string, role st
 		return "", "", err
 	}
 
-	if data.UserId != userId {
+	if data.UserID != userID {
 		return "", "", errors.New("Invalid refresh token")
 	}
 
-	newTokenString, refreshTokenString := js.GenerateTokens(userId, role)
+	newTokenString, refreshTokenString := js.GenerateTokens(userID, role)
 	js.redisService.Del(jti)
 
 	return newTokenString, refreshTokenString, nil
 }
 
 func (js *JWTServiceRSA) DecodeToken(tokenString string) (JWTData, error) {
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.Parse(tokenString, func(_ *jwt.Token) (any, error) {
 		return []byte(js.config.Keys.Public), nil
 	})
 	if err != nil || !token.Valid {
@@ -111,7 +111,7 @@ func (js *JWTServiceRSA) DecodeToken(tokenString string) (JWTData, error) {
 	if !ok {
 		return JWTData{}, err
 	}
-	userId, ok := claims["user_id"].(string)
+	userID, ok := claims["user_id"].(string)
 	if !ok {
 		return JWTData{}, err
 	}
@@ -121,7 +121,7 @@ func (js *JWTServiceRSA) DecodeToken(tokenString string) (JWTData, error) {
 	}
 	return JWTData{
 		Jti:    jti,
-		UserId: userId,
+		UserID: userID,
 		Role:   role,
 	}, nil
 }

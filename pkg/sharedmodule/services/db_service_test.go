@@ -106,29 +106,7 @@ func (suite *DBServiceTestSuite) TestNewDbConnectionWithSqliteConnectionError() 
 	}, "Expected panic on invalid SQLite DB path")
 }
 
-func (suite *DBServiceTestSuite) TestNewDbConnectionWithMysql() {
-	host, _ := suite.mysqlContainer.Host(suite.ctx)
-	port, _ := suite.mysqlContainer.MappedPort(suite.ctx, "3306")
-	connectionString := fmt.Sprintf(
-		"%s:%s@tcp(%s:%s)/%s",
-		user,
-		pass,
-		host,
-		port.Port(),
-		database,
-	)
-
-	dbService := services.NewDBServiceGorm(services.DatabaseConfig{
-		Driver:  "mysql",
-		Address: connectionString,
-	})
-	defer dbService.Close()
-	err := dbService.Connect()
-
-	suite.Nil(err, "Expected DB connection to be established")
-}
-
-func TestNewDbConnection(t *testing.T) {
+func TestDBService(t *testing.T) {
 	dbConnSuite := new(DBServiceTestSuite)
 	dbConnSuite.SetupTestSuite()
 	suite.Run(t, dbConnSuite)

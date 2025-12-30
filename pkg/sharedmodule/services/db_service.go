@@ -45,7 +45,7 @@ func (d *DBServiceGorm) Connect() error {
 
 	db, err := gorm.Open(driverMap[d.driver](d.url), &gorm.Config{})
 	if err != nil {
-		return err
+		panic("Failed to connect to database: " + err.Error())
 	}
 	d.DB = db
 

@@ -1,6 +1,9 @@
 package domain
 
-import "time"
+import (
+	"sort"
+	"time"
+)
 
 type Event struct {
 	ID   string
@@ -33,6 +36,9 @@ func (er *EventRegistry) GetAllEvents() []Event {
 	for _, event := range er.Events {
 		events = append(events, event)
 	}
+	sort.Slice(events, func(i, j int) bool {
+		return events[i].Date.Before(events[j].Date)
+	})
 	return events
 }
 

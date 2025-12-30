@@ -1,3 +1,4 @@
+// Package services contains services used across modules.
 package services
 
 import (
@@ -8,7 +9,7 @@ import (
 
 type ConfigService interface {
 	ReadConfig() (AppConfig, error)
-	WriteConfig(config AppConfig) error
+	WriteConfig() error
 	GetConfig() AppConfig
 }
 
@@ -67,7 +68,7 @@ func (c *ConfigServiceViper) ReadConfig() (AppConfig, error) {
 	return c.config, nil
 }
 
-func (c *ConfigServiceViper) WriteConfig(config AppConfig) error {
+func (c *ConfigServiceViper) WriteConfig() error {
 	defaultConfig()
 	return viper.SafeWriteConfig()
 }

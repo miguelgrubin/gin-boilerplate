@@ -1,3 +1,4 @@
+// Package domain contains custom error types and definitions.
 package domain
 
 type InvalidRefreshToken struct{}
