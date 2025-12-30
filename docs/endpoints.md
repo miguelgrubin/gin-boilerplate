@@ -12,9 +12,10 @@
 | POST   | /v1/store/order           | petshop |
 | GET    | /v1/store/order/{orderId} | petshop |
 | DELETE | /v1/store/order/{orderId} | petshop |
-| POST   | /v1/user                  | users   |
+| POST   | /v1/users                 | users   |
 | GET    | /v1/user/{username}       | users   |
-| PUT    | /v1/user/{username}       | users   |
+| PATCH  | /v1/user/{username}       | users   |
 | DELETE | /v1/user/{username}       | users   |
-| POST   | /v1/user/login            | users   |
-| POST   | /v1/user/logout           | users   |
+| POST   | /v1/auth/login            | users   |
+| POST   | /v1/auth/refresh          | users   |
+| POST   | /v1/auth/logout           | users   |

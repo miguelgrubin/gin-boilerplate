@@ -2,34 +2,33 @@ package pkg
 
 import (
 	"log"
-
-	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop"
-	"github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule"
 )
 
 /* MigrateAll runs all DB migrations */
 func MigrateAll() error {
-	config, err := ReadConfig()
+	app, err := NewApp()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	db := sharedmodule.NewDbConnection(config.Database.Driver, config.Database.Address)
+	app.SharedServices.DBService.Connect()
+	defer app.SharedServices.DBService.Close()
 
-	ps := petshop.NewPetShopModule(db)
-	err = ps.Automigrate(db)
+	app.PetShopModule.Automigrate()
+	app.UsersModule.Automigrate()
+
 	return err
 }
 
 func SeedAll() error {
-	config, err := ReadConfig()
+	app, err := NewApp()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	db := sharedmodule.NewDbConnection(config.Database.Driver, config.Database.Address)
+	app.SharedServices.DBService.Connect()
+	defer app.SharedServices.DBService.Close()
 
-	ps := petshop.NewPetShopModule(db)
-	err = ps.Seed(db)
+	app.PetShopModule.Seed()
 	return err
 }

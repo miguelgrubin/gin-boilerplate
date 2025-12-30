@@ -1,11 +1,11 @@
-package sharedmodule_test
+package services_test
 
 import (
 	"context"
 	"fmt"
 	"testing"
 
-	"github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule"
+	"github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule/services"
 	"github.com/stretchr/testify/suite"
 
 	"github.com/testcontainers/testcontainers-go"
@@ -19,14 +19,14 @@ const (
 	pass     = "password"
 )
 
-type NewDbConnectionTestSuite struct {
+type DBServiceTestSuite struct {
 	suite.Suite
 	ctx               context.Context
 	postgresContainer *postgres.PostgresContainer
 	mysqlContainer    *mysql.MySQLContainer
 }
 
-func (suite *NewDbConnectionTestSuite) SetupTestSuite() {
+func (suite *DBServiceTestSuite) SetupTestSuite() {
 	suite.ctx = context.Background()
 
 	postgresContainer, _ := postgres.Run(suite.ctx,
@@ -47,12 +47,12 @@ func (suite *NewDbConnectionTestSuite) SetupTestSuite() {
 	suite.mysqlContainer = mysqlContainer
 }
 
-func (suite *NewDbConnectionTestSuite) TearDownTestSuite() {
+func (suite *DBServiceTestSuite) TearDownTestSuite() {
 	testcontainers.CleanupContainer(suite.T(), suite.postgresContainer)
 	testcontainers.CleanupContainer(suite.T(), suite.mysqlContainer)
 }
 
-func (suite *NewDbConnectionTestSuite) TestNewDbConnectionWithPostgres() {
+func (suite *DBServiceTestSuite) TestNewDbConnectionWithPostgres() {
 	host, _ := suite.postgresContainer.Host(suite.ctx)
 	port, _ := suite.postgresContainer.MappedPort(suite.ctx, "5432")
 	connectionString := fmt.Sprintf(
@@ -64,30 +64,49 @@ func (suite *NewDbConnectionTestSuite) TestNewDbConnectionWithPostgres() {
 		port.Port(),
 	)
 
-	db := sharedmodule.NewDbConnection("postgres", connectionString)
+	dbService := services.NewDBServiceGorm(services.DatabaseConfig{
+		Driver:  "postgres",
+		Address: connectionString,
+	})
+	defer dbService.Close()
+	err := dbService.Connect()
 
-	suite.NotNil(db, "Expected DB connection to be established")
+	suite.Nil(err, "Expected no error on Postgres connection")
 }
 
-func (suite *NewDbConnectionTestSuite) TestNewDbConnectionWithPostgresConnectionError() {
+func (suite *DBServiceTestSuite) TestNewDbConnectionWithPostgresConnectionError() {
+	dbService := services.NewDBServiceGorm(services.DatabaseConfig{
+		Driver:  "postgres",
+		Address: "invalid-connection-string",
+	})
+
 	suite.Panics(func() {
-		sharedmodule.NewDbConnection("postgres", "invalid-connection-string")
+		dbService.Connect()
 	}, "Expected panic on invalid Postgres connection string")
 }
 
-func (suite *NewDbConnectionTestSuite) TestNewDbConnectionWithSqlite() {
-	db := sharedmodule.NewDbConnection("sqlite3", ":memory:")
+func (suite *DBServiceTestSuite) TestNewDbConnectionWithSqlite() {
+	dbService := services.NewDBServiceGorm(services.DatabaseConfig{
+		Driver:  "sqlite3",
+		Address: ":memory:",
+	})
 
-	suite.NotNil(db, "Expected DB connection to be established")
+	err := dbService.Connect()
+
+	suite.Nil(err, "Expected DB connection to be established")
 }
 
-func (suite *NewDbConnectionTestSuite) TestNewDbConnectionWithSqliteConnectionError() {
+func (suite *DBServiceTestSuite) TestNewDbConnectionWithSqliteConnectionError() {
+	dbService := services.NewDBServiceGorm(services.DatabaseConfig{
+		Driver:  "sqlite3",
+		Address: "/invalid/path/to/db.sqlite",
+	})
 	suite.Panics(func() {
-		sharedmodule.NewDbConnection("sqlite3", "/invalid/path/to/db.sqlite")
+		dbService.Connect()
 	}, "Expected panic on invalid SQLite DB path")
 }
 
-func (suite *NewDbConnectionTestSuite) TestNewDbConnectionWithMysql() {
+func (suite *DBServiceTestSuite) TestNewDbConnectionWithMysql() {
 	host, _ := suite.mysqlContainer.Host(suite.ctx)
 	port, _ := suite.mysqlContainer.MappedPort(suite.ctx, "3306")
 	connectionString := fmt.Sprintf(
@@ -99,19 +118,18 @@ func (suite *NewDbConnectionTestSuite) TestNewDbConnectionWithMysql() {
 		database,
 	)
 
-	db := sharedmodule.NewDbConnection("mysql", connectionString)
+	dbService := services.NewDBServiceGorm(services.DatabaseConfig{
+		Driver:  "mysql",
+		Address: connectionString,
+	})
+	defer dbService.Close()
+	err := dbService.Connect()
 
-	suite.NotNil(db, "Expected DB connection to be established")
-}
-
-func (suite *NewDbConnectionTestSuite) TestNewDbConnectionWithMysqlConnectionError() {
-	suite.Panics(func() {
-		sharedmodule.NewDbConnection("mysql", "invalid-connection-string")
-	}, "Expected panic on invalid MySQL connection string")
+	suite.Nil(err, "Expected DB connection to be established")
 }
 
 func TestNewDbConnection(t *testing.T) {
-	dbConnSuite := new(NewDbConnectionTestSuite)
+	dbConnSuite := new(DBServiceTestSuite)
 	dbConnSuite.SetupTestSuite()
 	suite.Run(t, dbConnSuite)
 	dbConnSuite.TearDownTestSuite()

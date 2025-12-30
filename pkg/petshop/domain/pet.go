@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule"
+	sd "github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule/domain"
 )
 
 const (
@@ -19,7 +19,7 @@ type Pet struct {
 	CreatedAt     time.Time
 	UpdatedAt     time.Time
 	DeletedAt     *time.Time
-	eventRegistry *sharedmodule.EventRegistry
+	eventRegistry *sd.EventRegistry
 }
 
 type CreatePetParams struct {
@@ -54,7 +54,7 @@ func NewPet(payload CreatePetParams) Pet {
 		UpdatedAt:     time.Now(),
 		CreatedAt:     time.Now(),
 		DeletedAt:     nil,
-		eventRegistry: sharedmodule.NewEventRegistry(),
+		eventRegistry: sd.NewEventRegistry(),
 	}
 	pet.eventRegistry.AddEvent(PetCreated)
 	return pet

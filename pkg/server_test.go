@@ -14,7 +14,8 @@ import (
 func createServerFixture() *gin.Engine {
 	gin.SetMode(gin.TestMode)
 	os.Setenv("APP_ENV", "test")
-	router := pkg.SetupRouter()
+	app, _ := pkg.NewApp()
+	router := pkg.SetupRouter(app)
 	return router
 }
 

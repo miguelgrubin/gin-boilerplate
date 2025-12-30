@@ -4,26 +4,27 @@ import (
 	"log"
 
 	"github.com/gin-gonic/gin"
-	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop"
-	"github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule"
-	"github.com/spf13/viper"
 )
 
 func RunServer() {
-	_, err := ReadConfig()
+	app, err := NewApp()
 	if err != nil {
-		log.Print("Config file not found: using default config")
+		log.Fatal(err)
 	}
+	address := app.SharedServices.ConfigService.GetConfig().Server.Address
 
-	r := SetupRouter()
-	err = r.Run(viper.GetString("server.address"))
+	app.SharedServices.DBService.Connect()
+	defer app.SharedServices.DBService.Close()
+
+	r := SetupRouter(app)
+	err = r.Run(address)
 	if err != nil {
 		log.Print(err)
 	}
 }
 
 /* SetupRouter creates gin router instance with all app routes */
-func SetupRouter() *gin.Engine {
+func SetupRouter(app *App) *gin.Engine {
 	r := gin.New()
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
@@ -31,16 +32,8 @@ func SetupRouter() *gin.Engine {
 		c.String(200, "Health check!")
 	})
 	v1 := r.Group("/v1")
-	NewServices(v1)
-	return r
-}
 
-/* NewServices inyects services on modules (petshop) */
-func NewServices(r *gin.RouterGroup) {
-	db := sharedmodule.NewDbConnection(
-		viper.GetString("database.driver"),
-		viper.GetString("database.address"),
-	)
-	ps := petshop.NewPetShopModule(db)
-	ps.Handlers.SetupRoutes(r)
+	app.PetShopModule.SetupRoutes(v1)
+	app.UsersModule.SetupRoutes(v1)
+	return r
 }

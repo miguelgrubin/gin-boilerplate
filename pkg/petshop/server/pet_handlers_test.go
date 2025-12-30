@@ -26,10 +26,7 @@ func createServerFixture(useCases usecases.PetUseCasesInterface) *gin.Engine {
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
 	v1 := router.Group("/v1")
-	petShopUseCases := usecases.PetShopUseCases{
-		Pet: useCases,
-	}
-	pc := server.NewPetShopHandlers(petShopUseCases)
+	pc := server.NewPetHandlers(useCases)
 	pc.SetupRoutes(v1)
 	return router
 }

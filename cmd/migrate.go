@@ -10,13 +10,9 @@ import (
 // migrateCmd represents the migrate command
 var migrateCmd = &cobra.Command{
 	Use:   "migrate",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Migrates the database to the latest version",
+	Long: `Migrates the database to the latest version. This command applies all pending migrations
+to ensure the database schema is up to date.`,
 	Run: func(_ *cobra.Command, _ []string) {
 		err := pkg.MigrateAll()
 		if err != nil {

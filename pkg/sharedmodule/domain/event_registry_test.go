@@ -1,14 +1,14 @@
-package sharedmodule_test
+package domain_test
 
 import (
 	"testing"
 
-	"github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule"
+	"github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule/domain"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestEventRegistry(t *testing.T) {
-	registry := sharedmodule.NewEventRegistry()
+	registry := domain.NewEventRegistry()
 	eventID := "por.que.asi"
 	registry.AddEvent(eventID)
 
@@ -19,7 +19,7 @@ func TestEventRegistry(t *testing.T) {
 }
 
 func TestEventRegistryGetAllEvents(t *testing.T) {
-	registry := sharedmodule.NewEventRegistry()
+	registry := domain.NewEventRegistry()
 	firstEventID := "por.que.asi"
 	secondEventID := "porque.si"
 	registry.AddEvent(firstEventID)
@@ -34,7 +34,7 @@ func TestEventRegistryGetAllEvents(t *testing.T) {
 }
 
 func TestEventRegistryHasEvent(t *testing.T) {
-	registry := sharedmodule.NewEventRegistry()
+	registry := domain.NewEventRegistry()
 	eventID := "por.que.asi"
 	registry.AddEvent(eventID)
 

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/miguelgrubin/gin-boilerplate/pkg"
 	"github.com/spf13/cobra"
 )
 
@@ -12,18 +11,7 @@ import (
 var rootCmd = &cobra.Command{
 	Use:   "app",
 	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	Run: func(_ *cobra.Command, _ []string) {
-		fmt.Println("Executing app serve:")
-		pkg.RunServer()
-	},
+	Long:  ``,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.

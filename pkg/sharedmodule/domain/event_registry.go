@@ -1,4 +1,4 @@
-package sharedmodule
+package domain
 
 import "time"
 

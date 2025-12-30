@@ -36,3 +36,8 @@ coverage.html
 
 database.db
 test/*.db
+
+# JWT keys
+*.pem
+*.key
+*.pub

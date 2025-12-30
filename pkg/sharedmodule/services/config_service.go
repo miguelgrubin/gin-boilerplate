@@ -1,5 +1,4 @@
-// Package pkg is the root and provides config service and entry points for running the application.
-package pkg
+package services
 
 import (
 	"os"
@@ -7,16 +6,20 @@ import (
 	"github.com/spf13/viper"
 )
 
-type JwtKeys struct {
-	Private string
-	Public  string
+type ConfigService interface {
+	ReadConfig() (AppConfig, error)
+	WriteConfig(config AppConfig) error
+	GetConfig() AppConfig
 }
 
-/* JwtConfig contains info about JWT security settings */
-type JwtConfig struct {
-	Keys       JwtKeys
-	Exp        int
-	ExpRefresh int
+/* AppConfig contains all configuration to run app instance */
+type AppConfig struct {
+	Server   ServerConfig
+	Database DatabaseConfig
+	Redis    RedisConfig
+	Jwt      JwtConfig
+	Debug    bool
+	Testing  bool
 }
 
 /* ServerConfig contains info about how the app will be served */
@@ -31,13 +34,46 @@ type DatabaseConfig struct {
 	Address string
 }
 
-/* AppConfig contains all configuration to run app instance */
-type AppConfig struct {
-	Server   ServerConfig
-	Database DatabaseConfig
-	Jwt      JwtConfig
-	Debug    bool
-	Testing  bool
+type RedisConfig struct {
+	Address  string
+	Password string
+	DB       int
+}
+
+/* JwtConfig contains info about JWT security settings */
+type JwtConfig struct {
+	Keys       JwtKeys
+	Exp        int
+	ExpRefresh int
+}
+
+type JwtKeys struct {
+	Private string
+	Public  string
+}
+
+type ConfigServiceViper struct {
+	config AppConfig
+}
+
+func NewConfigService() *ConfigServiceViper {
+	return &ConfigServiceViper{}
+}
+
+func (c *ConfigServiceViper) ReadConfig() (AppConfig, error) {
+	defaultConfig()
+	viper.ReadInConfig()
+	c.config = configFactory()
+	return c.config, nil
+}
+
+func (c *ConfigServiceViper) WriteConfig(config AppConfig) error {
+	defaultConfig()
+	return viper.SafeWriteConfig()
+}
+
+func (c *ConfigServiceViper) GetConfig() AppConfig {
+	return c.config
 }
 
 func isValidEnviroment(env string) bool {
@@ -64,6 +100,9 @@ func defaultConfig() {
 	viper.SetDefault("server.https", false)
 	viper.SetDefault("database.driver", "sqlite3")
 	viper.SetDefault("database.address", "database.db")
+	viper.SetDefault("redis.address", "0.0.0.0:6379")
+	viper.SetDefault("redis.password", "")
+	viper.SetDefault("redis.db", 0)
 	viper.SetDefault("jwt.keys.private", "")
 	viper.SetDefault("jwt.keys.public", "")
 	viper.SetDefault("jwt.exp", 60)
@@ -82,6 +121,11 @@ func configFactory() AppConfig {
 			Driver:  viper.GetString("database.driver"),
 			Address: viper.GetString("database.address"),
 		},
+		Redis: RedisConfig{
+			Address:  viper.GetString("redis.address"),
+			Password: viper.GetString("redis.password"),
+			DB:       viper.GetInt("redis.db"),
+		},
 		Jwt: JwtConfig{
 			Keys: JwtKeys{
 				Private: viper.GetString("jwt.keys.private"),
@@ -93,20 +137,4 @@ func configFactory() AppConfig {
 		Testing: viper.GetBool("testing"),
 		Debug:   viper.GetBool("debug"),
 	}
-}
-
-// ReadConfig from ./config.yaml or ./config_{{enviroment}}.yaml
-func ReadConfig() (AppConfig, error) {
-	defaultConfig()
-	err := viper.ReadInConfig()
-	if err != nil {
-		return configFactory(), err
-	}
-	return configFactory(), nil
-}
-
-// WriteConfig to ./config.yaml or ./config_{{environment}}.yaml
-func WriteConfig() error {
-	defaultConfig()
-	return viper.SafeWriteConfig()
 }

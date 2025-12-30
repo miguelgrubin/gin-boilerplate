@@ -11,6 +11,19 @@ type MockPetRepository struct {
 	mock.Mock
 }
 
+func (m *MockPetRepository) Automigrate() error {
+	args := m.Called()
+	return args.Error(0)
+}
+
+func (m *MockPetRepository) Seed() ([]domain.Pet, error) {
+	args := m.Called()
+	if args.Get(0) != nil {
+		return args.Get(0).([]domain.Pet), args.Error(1)
+	}
+	return nil, args.Error(1)
+}
+
 func (m MockPetRepository) Save(pet domain.Pet) error {
 	args := m.Called(pet)
 	return args.Error(0)
