@@ -68,8 +68,8 @@ func (js *JWTServiceRSA) GenerateTokens(userID string, role string) (string, str
 		return "", "", err
 	}
 
-	js.redisService.Set(refreshJti, userID, time.Minute*time.Duration(js.config.ExpRefresh))
-	return tokenString, refreshTokenString, nil
+	err = js.redisService.Set(refreshJti, userID, time.Minute*time.Duration(js.config.ExpRefresh))
+	return tokenString, refreshTokenString, err
 }
 
 func (js *JWTServiceRSA) ValidateToken(tokenString string) bool {
@@ -105,7 +105,11 @@ func (js *JWTServiceRSA) RefreshToken(tokenString string, userID string, role st
 	if err != nil {
 		return "", "", err
 	}
-	js.redisService.Del(jti)
+
+	err = js.redisService.Del(jti)
+	if err != nil {
+		return "", "", err
+	}
 
 	return newTokenString, refreshTokenString, nil
 }

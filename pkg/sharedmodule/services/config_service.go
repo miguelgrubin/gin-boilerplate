@@ -63,7 +63,10 @@ func NewConfigService() *ConfigServiceViper {
 
 func (c *ConfigServiceViper) ReadConfig() (AppConfig, error) {
 	defaultConfig()
-	viper.ReadInConfig()
+	err := viper.ReadInConfig()
+	if err != nil {
+		return AppConfig{}, err
+	}
 	c.config = configFactory()
 	return c.config, nil
 }

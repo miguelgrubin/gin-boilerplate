@@ -19,11 +19,15 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(_ *cobra.Command, _ []string) {
 		configService := services.NewConfigService()
-		configService.ReadConfig()
+		_, err := configService.ReadConfig()
+		if err != nil {
+			log.Println("Error reading config", err)
+			return
+		}
 		config := configService.GetConfig()
 		rsaService := services.NewRSAService(config.Jwt.Keys.Private, config.Jwt.Keys.Public)
 		rsaService.GenerateKeyPair()
-		err := rsaService.Write()
+		err = rsaService.Write()
 		if err != nil {
 			log.Println("Error generating keys:")
 			log.Fatal(err)

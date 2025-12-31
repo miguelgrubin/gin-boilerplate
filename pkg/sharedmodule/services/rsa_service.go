@@ -67,7 +67,7 @@ func (r *RSAServiceImpl) Write() error {
 		return err
 	}
 
-	err = os.WriteFile(r.publicPath, []byte(pubPem), 0644)
+	err = os.WriteFile(r.publicPath, []byte(pubPem), 0600)
 	if err != nil {
 		log.Println("error writing private key to file:", err)
 		return err
@@ -122,7 +122,7 @@ func exportRsaPublicKeyAsPemStr(pubkey *rsa.PublicKey) (string, error) {
 
 func readPemPubFile(path string) (*rsa.PublicKey, error) {
 	// Read the key file
-	pubPEM, err := os.ReadFile(path)
+	pubPEM, err := os.ReadFile(path) // #nosec G304 -- file path is controlled
 	if err != nil {
 		return nil, err
 	}
@@ -139,7 +139,7 @@ func readPemPubFile(path string) (*rsa.PublicKey, error) {
 }
 
 func readPemPrivFile(path string) (*rsa.PrivateKey, error) {
-	privPEM, err := os.ReadFile(path)
+	privPEM, err := os.ReadFile(path) // #nosec G304 -- file path is controlled
 	if err != nil {
 		return nil, err
 	}

@@ -30,21 +30,30 @@ func NewApp() (*App, error) {
 }
 
 func (a *App) Migrate() error {
-	a.SharedServices.DBService.Connect()
+	err := a.SharedServices.DBService.Connect()
+	if err != nil {
+		log.Println("Error connecting to database:", err)
+		return err
+	}
 	defer a.SharedServices.DBService.Close()
 
-	a.PetShopModule.Automigrate()
-	a.UsersModule.Automigrate()
+	err = a.PetShopModule.Automigrate()
+	if err != nil {
+		return err
+	}
+	err = a.UsersModule.Automigrate()
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
 
 func (a *App) Seed() error {
-	a.SharedServices.DBService.Connect()
 	defer a.SharedServices.DBService.Close()
 
-	a.PetShopModule.Seed()
-	return nil
+	err := a.PetShopModule.Seed()
+	return err
 }
 
 func (a *App) WriteConfig() error {
@@ -59,7 +68,6 @@ func (a *App) GenerateKeys() error {
 func (a *App) RunServer() {
 	address := a.SharedServices.ConfigService.GetConfig().Server.Address
 
-	a.SharedServices.DBService.Connect()
 	defer a.SharedServices.DBService.Close()
 
 	r := gin.New()

@@ -118,12 +118,18 @@ func parseArgon2Hash(encodedHash string) (*Argon2Configuration, error) {
 
 	// Extract version information
 	var version int
-	fmt.Sscanf(components[2], "v=%d", &version)
+	_, err := fmt.Sscanf(components[2], "v=%d", &version)
+	if err != nil {
+		return nil, fmt.Errorf("version parsing failed: %w", err)
+	}
 
 	// Parse configuration parameters
 	config := &Argon2Configuration{}
-	fmt.Sscanf(components[3], "m=%d,t=%d,p=%d",
+	_, err = fmt.Sscanf(components[3], "m=%d,t=%d,p=%d",
 		&config.MemoryCost, &config.TimeCost, &config.Threads)
+	if err != nil {
+		return nil, fmt.Errorf("configuration parsing failed: %w", err)
+	}
 
 	// Decode salt component
 	salt, err := base64.RawStdEncoding.DecodeString(components[4])
@@ -138,7 +144,7 @@ func parseArgon2Hash(encodedHash string) (*Argon2Configuration, error) {
 		return nil, fmt.Errorf("hash decoding failed: %w", err)
 	}
 	config.HashRaw = hash
-	config.KeyLength = uint32(len(hash))
+	config.KeyLength = uint32(len(hash)) // #nosec G115 -- set key length based on decoded hash length
 
 	return config, nil
 }
