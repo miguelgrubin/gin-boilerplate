@@ -2,6 +2,8 @@
 package usecases
 
 import (
+	"log"
+
 	sd "github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule/domain"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule/services"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/users/domain"
@@ -44,8 +46,8 @@ type UserUseCasesInterface interface {
 	LoggerOut(string) error
 }
 
-func NewUserUseCases(pr repositories.UserRepository, js services.JWTService) UserUseCases {
-	return UserUseCases{ur: pr, js: js}
+func NewUserUseCases(pr repositories.UserRepository, js services.JWTService, hs services.HashService) UserUseCases {
+	return UserUseCases{ur: pr, js: js, hs: hs}
 }
 
 func (p *UserUseCases) Creator(params UserCreatorParams) (domain.User, error) {
@@ -102,16 +104,18 @@ func (p *UserUseCases) Deleter(username string) error {
 func (p *UserUseCases) LoggerIn(username string, password string) (string, string, error) {
 	user, err := p.ur.FindOneByUsername(username)
 	if err != nil {
+		log.Println("username not found")
 		return "", "", &domain.InvalidLogin{}
 	}
 
 	if !p.hs.Compare(user.PasswordHash, password) {
+		log.Println("invalid password")
 		return "", "", &domain.InvalidLogin{}
 	}
 
-	jwt, refreshToken := p.js.GenerateTokens(user.ID, user.Role)
+	jwt, refreshToken, err := p.js.GenerateTokens(user.ID, user.Role)
 
-	return jwt, refreshToken, nil
+	return jwt, refreshToken, err
 }
 
 func (p *UserUseCases) RefreshToken(refreshToken string) (string, string, error) {
@@ -130,7 +134,7 @@ func (p *UserUseCases) RefreshToken(refreshToken string) (string, string, error)
 		return "", "", &sd.InvalidRefreshToken{}
 	}
 
-	return newToken, newRefreshToken, nil
+	return newToken, newRefreshToken, err
 }
 
 func (p *UserUseCases) LoggerOut(token string) error {

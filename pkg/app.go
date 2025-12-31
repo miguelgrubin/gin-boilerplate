@@ -51,6 +51,11 @@ func (a *App) WriteConfig() error {
 	return a.SharedServices.ConfigService.WriteConfig()
 }
 
+func (a *App) GenerateKeys() error {
+	a.SharedServices.RSAService.GenerateKeyPair()
+	return a.SharedServices.RSAService.Write()
+}
+
 func (a *App) RunServer() {
 	address := a.SharedServices.ConfigService.GetConfig().Server.Address
 

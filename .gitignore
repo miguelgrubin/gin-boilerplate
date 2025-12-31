@@ -41,3 +41,7 @@ test/*.db
 *.pem
 *.key
 *.pub
+
+# Config files
+config.yaml
+config.test.yaml
