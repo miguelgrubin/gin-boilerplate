@@ -30,8 +30,11 @@ Using factory pattern, interfaces and dependency inversion.
 
 ## CLI Usage
 
-- app
-- app serve
-- app migrate
-- app seed
-- app create config
+| Commands              |                           |
+| :-------------------- | :------------------------ |
+| `./app`               | Help                      |
+| `./app serve`         | Runs HTTP server          |
+| `./app migrate`       | Applies GORM automigrate  |
+| `./app seed`          | Populates DB              |
+| `./app create-config` | Creates default config    |
+| `./app generate-keys` | Generates random RSA keys |
