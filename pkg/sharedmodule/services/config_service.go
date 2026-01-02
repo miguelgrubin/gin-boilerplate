@@ -2,6 +2,7 @@
 package services
 
 import (
+	"log"
 	"os"
 
 	"github.com/spf13/viper"
@@ -54,17 +55,23 @@ type JwtKeys struct {
 }
 
 type ConfigServiceViper struct {
-	config AppConfig
+	configPath *string
+	config     AppConfig
 }
 
 func NewConfigService() *ConfigServiceViper {
-	return &ConfigServiceViper{}
+	return &ConfigServiceViper{configPath: nil}
+}
+
+func NewConfigServiceWithPath(configPath *string) *ConfigServiceViper {
+	return &ConfigServiceViper{configPath: configPath}
 }
 
 func (c *ConfigServiceViper) ReadConfig() (AppConfig, error) {
-	defaultConfig()
+	c.defaultConfig()
 	err := viper.ReadInConfig()
 	if err != nil {
+		log.Println(err)
 		return AppConfig{}, err
 	}
 	c.config = configFactory()
@@ -72,7 +79,7 @@ func (c *ConfigServiceViper) ReadConfig() (AppConfig, error) {
 }
 
 func (c *ConfigServiceViper) WriteConfig() error {
-	defaultConfig()
+	c.defaultConfig()
 	return viper.SafeWriteConfig()
 }
 
@@ -91,13 +98,17 @@ func isValidEnviroment(env string) bool {
 	return false
 }
 
-func defaultConfig() {
+func (c *ConfigServiceViper) defaultConfig() {
 	srcName := "config"
 	if isValidEnviroment(os.Getenv("APP_ENV")) {
 		srcName = srcName + "_" + os.Getenv("APP_ENV")
 	}
 	viper.SetConfigName(srcName)
-	viper.AddConfigPath(".")
+	if c.configPath != nil {
+		viper.AddConfigPath(*c.configPath)
+	} else {
+		viper.AddConfigPath(".")
+	}
 	viper.SetConfigType("yaml")
 
 	viper.SetDefault("server.address", "0.0.0.0:8080")

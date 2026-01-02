@@ -95,29 +95,29 @@ func (r *RSAServiceImpl) Read() error {
 }
 
 func exportRsaPrivateKeyAsPemStr(privkey *rsa.PrivateKey) string {
-	privkey_bytes := x509.MarshalPKCS1PrivateKey(privkey)
-	privkey_pem := pem.EncodeToMemory(
+	privkeyBytes := x509.MarshalPKCS1PrivateKey(privkey)
+	privkeyPem := pem.EncodeToMemory(
 		&pem.Block{
 			Type:  "RSA PRIVATE KEY",
-			Bytes: privkey_bytes,
+			Bytes: privkeyBytes,
 		},
 	)
-	return string(privkey_pem)
+	return string(privkeyPem)
 }
 
 func exportRsaPublicKeyAsPemStr(pubkey *rsa.PublicKey) (string, error) {
-	pubkey_bytes, err := x509.MarshalPKIXPublicKey(pubkey)
+	pubkeyBytes, err := x509.MarshalPKIXPublicKey(pubkey)
 	if err != nil {
 		return "", err
 	}
-	pubkey_pem := pem.EncodeToMemory(
+	pubkeyPem := pem.EncodeToMemory(
 		&pem.Block{
 			Type:  "RSA PUBLIC KEY",
-			Bytes: pubkey_bytes,
+			Bytes: pubkeyBytes,
 		},
 	)
 
-	return string(pubkey_pem), nil
+	return string(pubkeyPem), nil
 }
 
 func readPemPubFile(path string) (*rsa.PublicKey, error) {

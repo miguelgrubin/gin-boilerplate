@@ -1,107 +1,75 @@
 package services_test
 
 import (
-	"log"
 	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule/services"
 	"github.com/stretchr/testify/suite"
 )
 
-func fileExists(filename string) bool {
-	info, err := os.Stat(filename)
-	if os.IsNotExist(err) {
-		return false
-	}
-	return !info.IsDir()
-}
-
-func backupLocalConfig(src string, dst string) {
-	if fileExists(src) {
-		err := os.Rename(src, dst)
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
-}
-
-func restoreLocalConfig(src string, dst string) {
-	if fileExists(src) {
-		err := os.Rename(src, dst)
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
-}
-
 type ConfigServiceTestSuite struct {
+	configPath string
 	suite.Suite
 }
 
-func (suite *ConfigServiceTestSuite) SetupTestSuite() {
-	os.Chdir("../../test")
-}
-
-func (s *ConfigServiceTestSuite) TestReadConfigWithValidEnv() {
+func (suite *ConfigServiceTestSuite) TestReadConfigWithValidEnv() {
 	os.Setenv("APP_ENV", "test")
 
-	cs := services.NewConfigService()
+	cs := services.NewConfigServiceWithPath(&suite.configPath)
 	config, err := cs.ReadConfig()
 
-	s.NoError(err)
-	s.NotNil(config)
+	suite.NoError(err)
+	suite.NotNil(config)
 }
 
-func (s *ConfigServiceTestSuite) TestReadConfigWithInvalidEnv() {
+func (suite *ConfigServiceTestSuite) TestReadConfigWithInvalidEnv() {
 	os.Setenv("APP_ENV", "no-valid-env")
 
-	cs := services.NewConfigService()
+	cs := services.NewConfigServiceWithPath(&suite.configPath)
 	config, err := cs.ReadConfig()
 
-	s.NoError(err)
-	s.NotNil(config)
+	suite.NoError(err)
+	suite.NotNil(config)
 }
 
-func (s *ConfigServiceTestSuite) TestReadConfigWithoutEnv() {
+func (suite *ConfigServiceTestSuite) TestReadConfigWithoutEnv() {
 	os.Unsetenv("APP_ENV")
 
-	cs := services.NewConfigService()
+	cs := services.NewConfigServiceWithPath(&suite.configPath)
 	config, err := cs.ReadConfig()
 
-	s.NoError(err)
-	s.NotNil(config)
+	suite.NoError(err)
+	suite.NotNil(config)
 	os.Setenv("APP_ENV", "test")
 }
 
-func (s *ConfigServiceTestSuite) TestReadConfigWithNonExistantFile() {
-	localPath := "config_local.yaml"
-	tmpPath := "config_tmp.yaml"
-	backupLocalConfig(localPath, tmpPath)
+func (suite *ConfigServiceTestSuite) TestReadConfigWithNonExistantFile() {
 	os.Setenv("APP_ENV", "local")
+	os.Remove(suite.configPath + "/config_local.yaml")
 
-	cs := services.NewConfigService()
+	cs := services.NewConfigServiceWithPath(&suite.configPath)
 	_, err := cs.ReadConfig()
 
-	s.NoError(err)
-	restoreLocalConfig(tmpPath, localPath)
+	suite.Error(err)
 	os.Setenv("APP_ENV", "test")
 }
 
-func (s *ConfigServiceTestSuite) TestWriteConfig() {
+func (suite *ConfigServiceTestSuite) TestWriteConfig() {
 	os.Setenv("APP_ENV", "local")
-	os.RemoveAll("config_local.yaml")
+	os.Remove(suite.configPath + "/config_local.yaml")
 
-	cs := services.NewConfigService()
+	cs := services.NewConfigServiceWithPath(&suite.configPath)
 	err := cs.WriteConfig()
 
-	s.NoError(err)
+	suite.NoError(err)
 	os.Setenv("APP_ENV", "test")
-	os.RemoveAll("config_local.yaml")
 }
 
 func TestConfigService(t *testing.T) {
 	csts := new(ConfigServiceTestSuite)
-	csts.SetupTestSuite()
+	tp, _ := filepath.Abs("../../../test/")
+	csts.configPath = tp
 	suite.Run(t, csts)
 }

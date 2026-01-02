@@ -1,16 +1,13 @@
 .PHONY: help all test test/cover clean
 
 help:         ## Show this help.
-	@echo "Makefile commnads list\n"
+	@echo "Makefile commands list\n"
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 install:      ## Install dependencies with go mod
 	go mod vendor
 build:        ## Clean & Compile
 	rm -f bin/*
 	go build -o bin/app -race
-run: build
-	cd bin && ./app create-config
-	cd bin && ./app serve
 lint:         ## Show lint errors
 	revive -config revive.toml -exclude vendor/... -formatter friendly ./...
 sec:          ## Show security errors

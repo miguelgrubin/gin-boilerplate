@@ -1,0 +1,18 @@
+database:
+    address: database.db
+    driver: sqlite3
+debug: false
+jwt:
+    exp: 60
+    exp_refresh: 10080
+    keys:
+        private: ""
+        public: ""
+redis:
+    address: 0.0.0.0:6379
+    db: 0
+    password: ""
+server:
+    address: 0.0.0.0:8080
+    https: false
+testing: false
