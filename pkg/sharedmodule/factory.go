@@ -11,7 +11,7 @@ type SharedModuleServices struct {
 	ConfigService services.ConfigService
 	JWTService    services.JWTService
 	HashService   services.HashService
-	RedisService  services.RedisServiceInterface
+	RedisService  services.RedisService
 	DBService     services.DBService
 	RSAService    services.RSAService
 }

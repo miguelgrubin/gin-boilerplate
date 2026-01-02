@@ -25,13 +25,13 @@ type JWTService interface {
 
 type JWTServiceRSA struct {
 	config       JwtConfig
-	redisService RedisServiceInterface
+	redisService RedisService
 	rsaService   RSAService
 }
 
 var _ JWTService = &JWTServiceRSA{}
 
-func NewJWTServiceRSA(redis RedisServiceInterface, rsa RSAService, c JwtConfig) *JWTServiceRSA {
+func NewJWTServiceRSA(redis RedisService, rsa RSAService, c JwtConfig) *JWTServiceRSA {
 	return &JWTServiceRSA{
 		config:       c,
 		redisService: redis,
