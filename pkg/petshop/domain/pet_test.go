@@ -8,7 +8,7 @@ import (
 )
 
 func TestNewPet(t *testing.T) {
-	pet := domain.NewPet(domain.CreatePetParams{
+	pet := domain.CreatePet(domain.CreatePetParams{
 		Name:   "Piggie",
 		Status: "Active",
 	})
@@ -17,10 +17,9 @@ func TestNewPet(t *testing.T) {
 }
 
 func TestPetUpdateName(t *testing.T) {
-	pet := domain.NewPet(domain.CreatePetParams{
-		Name:   "Piggie",
-		Status: "Active",
-	})
+	pet := domain.NewPet()
+	pet.Name = "Piggie"
+	pet.Status = "Active"
 	newName := "Peggie"
 	pet.Update(domain.UpdatePetParams{
 		Name: &newName,
@@ -30,10 +29,9 @@ func TestPetUpdateName(t *testing.T) {
 }
 
 func TestPetUpdateStatus(t *testing.T) {
-	pet := domain.NewPet(domain.CreatePetParams{
-		Name:   "Piggie",
-		Status: "Active",
-	})
+	pet := domain.NewPet()
+	pet.Name = "Piggie"
+	pet.Status = "Active"
 	newStatus := "Sleeping"
 	pet.Update(domain.UpdatePetParams{
 		Status: &newStatus,

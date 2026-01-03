@@ -38,6 +38,10 @@ type UserLoginRequest struct {
 	Password string `json:"password" binding:"required"`
 }
 
+type UserRefreshTokenRequest struct {
+	RefreshToken string `json:"refresh_token" binding:"required"`
+}
+
 func UserResponseFromDomain(u domain.User) UserResponse {
 	return UserResponse{
 		u.ID,

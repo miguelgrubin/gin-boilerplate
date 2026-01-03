@@ -42,7 +42,7 @@ func (uh *UserHandlers) UserCreateHandler(c *gin.Context) {
 
 func (uh *UserHandlers) UserShowHandler(c *gin.Context) {
 	username := c.Param("username")
-	user, err := uh.usecase.Showher(username)
+	user, err := uh.usecase.Shower(username)
 
 	if err != nil {
 		handleError(c, err)
@@ -100,7 +100,12 @@ func (uh *UserHandlers) UserLoginHandler(c *gin.Context) {
 }
 
 func (uh *UserHandlers) UserRefreshHandler(c *gin.Context) {
-	token, refreshToken, err := uh.usecase.RefreshToken(c.GetHeader("Authorization"))
+	var refreshParams UserRefreshTokenRequest
+	if err := c.ShouldBindJSON(&refreshParams); err != nil {
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+	token, refreshToken, err := uh.usecase.RefreshToken(refreshParams.RefreshToken)
 	if err != nil {
 		handleError(c, err)
 		return

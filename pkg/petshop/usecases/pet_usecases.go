@@ -37,7 +37,7 @@ func NewPetUseCases(pr repositories.PetRepository) PetUseCases {
 }
 
 func (p *PetUseCases) Creator(params PetCreatorParams) (domain.Pet, error) {
-	pet := domain.NewPet(domain.CreatePetParams(params))
+	pet := domain.CreatePet(domain.CreatePetParams(params))
 	err := p.pr.Save(pet)
 	if err != nil {
 		return domain.Pet{}, err

@@ -39,7 +39,10 @@ func (suite *PetRepositoryTestSuite) CleanDatabase() {
 }
 
 func (suite *PetRepositoryTestSuite) TestSaveWithNewPet() {
-	pet := domain.NewPet(domain.CreatePetParams{Name: "testy", Status: "sleeping"})
+	pet := domain.CreatePet(domain.CreatePetParams{
+		Name:   "testy",
+		Status: "sleeping",
+	})
 	err := suite.petRepository.Save(pet)
 
 	storedPet, _ := suite.petRepository.FindOne(pet.ID)

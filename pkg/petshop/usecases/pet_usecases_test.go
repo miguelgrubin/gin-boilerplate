@@ -12,10 +12,10 @@ import (
 )
 
 func TestPetShowerWhenHasResult(t *testing.T) {
-	pet := domain.NewPet(domain.CreatePetParams{
-		Name:   "Piggie",
-		Status: "Active",
-	})
+	pet := domain.NewPet()
+	pet.ID = "pet-id"
+	pet.Name = "Piggie"
+	pet.Status = "Active"
 	pr := new(psMocks.MockPetRepository)
 	pr.On("FindOne", pet.ID).Return(&pet, nil)
 	useCases := usecases.NewPetUseCases(pr)
@@ -27,10 +27,10 @@ func TestPetShowerWhenHasResult(t *testing.T) {
 }
 
 func TestPetShowerWhenHasNotResult(t *testing.T) {
-	pet := domain.NewPet(domain.CreatePetParams{
-		Name:   "Piggie",
-		Status: "Active",
-	})
+	pet := domain.NewPet()
+	pet.ID = "pet-id"
+	pet.Name = "Piggie"
+	pet.Status = "Active"
 
 	prError := errors.New("Random error from db layer")
 	pr := new(psMocks.MockPetRepository)
@@ -92,10 +92,10 @@ func TestPetFinder(t *testing.T) {
 
 func TestPetUpdaterWithExistantPet(t *testing.T) {
 	newName := "New Name"
-	pet := domain.NewPet(domain.CreatePetParams{
-		Name:   "Piggie",
-		Status: "Active",
-	})
+	pet := domain.NewPet()
+	pet.ID = "pet-id"
+	pet.Name = "Piggie"
+	pet.Status = "Active"
 	pr := new(psMocks.MockPetRepository)
 	pr.On("FindOne", pet.ID).Return(&pet, nil)
 	pr.On("Save", mock.AnythingOfType("domain.Pet")).Return(nil)
@@ -110,10 +110,10 @@ func TestPetUpdaterWithExistantPet(t *testing.T) {
 
 func TestPetUpdaterWithUnexistantPet(t *testing.T) {
 	newName := "New Name"
-	pet := domain.NewPet(domain.CreatePetParams{
-		Name:   "Piggie",
-		Status: "Active",
-	})
+	pet := domain.NewPet()
+	pet.ID = "pet-id"
+	pet.Name = "Piggie"
+	pet.Status = "Active"
 	pr := new(psMocks.MockPetRepository)
 	pr.On("FindOne", pet.ID).Return(&domain.Pet{}, &domain.PetNotFound{ID: pet.ID})
 
@@ -126,10 +126,10 @@ func TestPetUpdaterWithUnexistantPet(t *testing.T) {
 
 func TestPetUpdaterWithSaveError(t *testing.T) {
 	newName := "New Name"
-	pet := domain.NewPet(domain.CreatePetParams{
-		Name:   "Piggie",
-		Status: "Active",
-	})
+	pet := domain.NewPet()
+	pet.ID = "pet-id"
+	pet.Name = "Piggie"
+	pet.Status = "Active"
 	pr := new(psMocks.MockPetRepository)
 	pr.On("FindOne", pet.ID).Return(&pet, nil)
 	pr.On("Save", mock.AnythingOfType("domain.Pet")).Return(errors.New("generic error from repository"))
@@ -142,10 +142,10 @@ func TestPetUpdaterWithSaveError(t *testing.T) {
 }
 
 func TestPetDeleterWithExistantPet(t *testing.T) {
-	pet := domain.NewPet(domain.CreatePetParams{
-		Name:   "Piggie",
-		Status: "Active",
-	})
+	pet := domain.NewPet()
+	pet.ID = "pet-id"
+	pet.Name = "Piggie"
+	pet.Status = "Active"
 	pr := new(psMocks.MockPetRepository)
 	pr.On("FindOne", pet.ID).Return(&pet, nil)
 	pr.On("Delete", pet.ID).Return(nil)
@@ -158,10 +158,10 @@ func TestPetDeleterWithExistantPet(t *testing.T) {
 }
 
 func TestPetDeleterWithUnexistantPet(t *testing.T) {
-	pet := domain.NewPet(domain.CreatePetParams{
-		Name:   "Piggie",
-		Status: "Active",
-	})
+	pet := domain.NewPet()
+	pet.ID = "pet-id"
+	pet.Name = "Piggie"
+	pet.Status = "Active"
 	pr := new(psMocks.MockPetRepository)
 	pr.On("FindOne", pet.ID).Return(&domain.Pet{}, &domain.PetNotFound{ID: pet.ID})
 

@@ -38,7 +38,7 @@ type UserUpdatersParams struct {
 
 type UserUseCasesInterface interface {
 	Creator(UserCreatorParams) (domain.User, error)
-	Showher(string) (domain.User, error)
+	Shower(string) (domain.User, error)
 	Updater(string, UserUpdatersParams) (domain.User, error)
 	Deleter(string) error
 	LoggerIn(string, string) (string, string, error)
@@ -64,7 +64,7 @@ func (p *UserUseCases) Creator(params UserCreatorParams) (domain.User, error) {
 	return user, nil
 }
 
-func (p *UserUseCases) Showher(username string) (domain.User, error) {
+func (p *UserUseCases) Shower(username string) (domain.User, error) {
 	user, err := p.ur.FindOneByUsername(username)
 	if err != nil {
 		return domain.User{}, &domain.UsernameNotFound{Username: username}

@@ -76,11 +76,11 @@ func (r SQLPetRepository) Automigrate() error {
 
 func (r SQLPetRepository) Seed() ([]domain.Pet, error) {
 	pets := []domain.Pet{
-		domain.NewPet(domain.CreatePetParams{
+		domain.CreatePet(domain.CreatePetParams{
 			Name:   "Tommy",
 			Status: "bored",
 		}),
-		domain.NewPet(domain.CreatePetParams{
+		domain.CreatePet(domain.CreatePetParams{
 			Name:   "Katty",
 			Status: "sleeping",
 		}),

@@ -111,7 +111,7 @@ func (ts *UserUsecasesTestSuite) TestShower() {
 		ts.hashServiceMock,
 	)
 
-	returnedUser, err := uc.Showher("user-id")
+	returnedUser, err := uc.Shower("user-id")
 
 	ts.NoError(err)
 	ts.Equal(user.ID, returnedUser.ID)
@@ -127,7 +127,7 @@ func (ts *UserUsecasesTestSuite) TestShowerNotFound() {
 		ts.hashServiceMock,
 	)
 
-	_, err := uc.Showher("user-id")
+	_, err := uc.Shower("user-id")
 
 	ts.Error(err)
 	ts.IsType(&domain.UsernameNotFound{}, err)
