@@ -48,17 +48,6 @@ type UpdateUserParams struct {
 
 func NewUser() User {
 	user := User{
-		ID:            "",
-		Username:      "",
-		FirstName:     "",
-		LastName:      "",
-		Email:         "",
-		Phone:         "",
-		Status:        "",
-		Role:          "",
-		UpdatedAt:     time.Now(),
-		CreatedAt:     time.Now(),
-		DeletedAt:     nil,
 		eventRegistry: sd.NewEventRegistry(),
 	}
 	user.eventRegistry.AddEvent(UserCreated)
