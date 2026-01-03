@@ -5,19 +5,19 @@ import (
 )
 
 func UserEntityToDomain(ue UserEntity) domain.User {
-	return domain.User{
-		ID:           ue.ID,
-		Username:     ue.Username,
-		FirstName:    ue.FirstName,
-		LastName:     ue.LastName,
-		Email:        ue.Email,
-		PasswordHash: ue.PasswordHash,
-		Status:       ue.Status,
-		Role:         ue.Role,
-		CreatedAt:    ue.CreatedAt,
-		UpdatedAt:    ue.UpdatedAt,
-		DeletedAt:    ue.DeletedAt,
-	}
+	user := domain.NewUser()
+	user.ID = ue.ID
+	user.Username = ue.Username
+	user.FirstName = ue.FirstName
+	user.LastName = ue.LastName
+	user.Email = ue.Email
+	user.PasswordHash = ue.PasswordHash
+	user.Status = ue.Status
+	user.Role = ue.Role
+	user.CreatedAt = ue.CreatedAt
+	user.UpdatedAt = ue.UpdatedAt
+	user.DeletedAt = ue.DeletedAt
+	return user
 }
 
 func UserEntityFromDomain(u domain.User) UserEntity {

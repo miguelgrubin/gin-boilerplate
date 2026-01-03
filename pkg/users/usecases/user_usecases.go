@@ -46,12 +46,12 @@ type UserUseCasesInterface interface {
 	LoggerOut(string) error
 }
 
-func NewUserUseCases(pr repositories.UserRepository, js services.JWTService, hs services.HashService) UserUseCases {
-	return UserUseCases{ur: pr, js: js, hs: hs}
+func NewUserUseCases(ur repositories.UserRepository, js services.JWTService, hs services.HashService) UserUseCases {
+	return UserUseCases{ur: ur, js: js, hs: hs}
 }
 
 func (p *UserUseCases) Creator(params UserCreatorParams) (domain.User, error) {
-	user := domain.NewUser(domain.CreateUserParams(params))
+	user := domain.CreateUser(domain.CreateUserParams(params))
 	hashPwd, err := p.hs.Hash(params.Password)
 	if err != nil {
 		return domain.User{}, err
