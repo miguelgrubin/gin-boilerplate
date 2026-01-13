@@ -4,16 +4,20 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule/middlewares"
+	"github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule/services"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/users/usecases"
 )
 
 type UserHandlers struct {
-	usecase usecases.UserUseCasesInterface
+	usecase    usecases.UserUseCasesInterface
+	jwtService services.JWTService
 }
 
-func NewUserHandlers(u usecases.UserUseCasesInterface) UserHandlers {
+func NewUserHandlers(u usecases.UserUseCasesInterface, js services.JWTService) UserHandlers {
 	return UserHandlers{
-		usecase: u,
+		usecase:    u,
+		jwtService: js,
 	}
 }
 
@@ -126,11 +130,15 @@ func (uh *UserHandlers) UserLogoutHandler(c *gin.Context) {
 }
 
 func (uh *UserHandlers) SetupRoutes(r *gin.RouterGroup) {
-	r.POST("/users", uh.UserCreateHandler)
-	r.GET("/user/:username", uh.UserShowHandler)
-	r.PATCH("/user/:username", uh.UserUpdateHandler)
-	r.DELETE("/user/:username", uh.UserDeleteHandler)
 	r.POST("/auth/login", uh.UserLoginHandler)
-	r.POST("/auth/refresh", uh.UserRefreshHandler)
-	r.POST("/auth/logout", uh.UserLogoutHandler)
+	authorized := r.Group("/")
+	authorized.Use(middlewares.AuthRequired(uh.jwtService))
+	{
+		authorized.POST("/users", uh.UserCreateHandler)
+		authorized.GET("/user/:username", uh.UserShowHandler)
+		authorized.PATCH("/user/:username", uh.UserUpdateHandler)
+		authorized.DELETE("/user/:username", uh.UserDeleteHandler)
+		authorized.POST("/auth/refresh", uh.UserRefreshHandler)
+		authorized.POST("/auth/logout", uh.UserLogoutHandler)
+	}
 }

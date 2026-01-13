@@ -33,7 +33,7 @@ func NewUsersModule(s sharedmodule.SharedModuleServices) UsersModule {
 
 	userRepository := repositories.NewUserRepository(db)
 	userUseCases := usecases.NewUserUseCases(userRepository, s.JWTService, s.HashService)
-	userHandlers := server.NewUserHandlers(&userUseCases)
+	userHandlers := server.NewUserHandlers(&userUseCases, s.JWTService)
 
 	return UsersModule{
 		SharedServices: s,

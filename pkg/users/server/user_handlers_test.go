@@ -2,7 +2,6 @@ package server_test
 
 import (
 	"bytes"
-	"context"
 	"encoding/json"
 	"errors"
 	"net/http"
@@ -13,6 +12,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	sDomain "github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule/domain"
+	sMocks "github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule/mocks"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/users/domain"
 	uMocks "github.com/miguelgrubin/gin-boilerplate/pkg/users/mocks"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/users/server"
@@ -28,7 +28,9 @@ func createServerFixture(useCases usecases.UserUseCasesInterface) *gin.Engine {
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
 	v1 := router.Group("/v1")
-	pc := server.NewUserHandlers(useCases)
+	js := new(sMocks.MockJWTService)
+	js.On("ValidateToken", mock.Anything).Return(true)
+	pc := server.NewUserHandlers(useCases, js)
 	pc.SetupRoutes(v1)
 	return router
 }
@@ -70,6 +72,7 @@ func TestCreateUser(t *testing.T) {
 	router := createServerFixture(puc)
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("POST", "/v1/users", bytes.NewBuffer(body))
+	req.Header.Add("Authorization", "Bearer jwt.token.here")
 	router.ServeHTTP(w, req)
 
 	assert.NoError(t, err)
@@ -91,6 +94,7 @@ func TestCreateUserBadRequest(t *testing.T) {
 	router := createServerFixture(puc)
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("POST", "/v1/users", bytes.NewBuffer(body))
+	req.Header.Add("Authorization", "Bearer jwt.token.here")
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusBadRequest, w.Code)
@@ -110,6 +114,7 @@ func TestCreateUserWithErrors(t *testing.T) {
 	router := createServerFixture(puc)
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("POST", "/v1/users", bytes.NewBuffer(body))
+	req.Header.Add("Authorization", "Bearer jwt.token.here")
 	router.ServeHTTP(w, req)
 
 	assert.NoError(t, err)
@@ -123,6 +128,7 @@ func TestShowUser(t *testing.T) {
 	router := createServerFixture(puc)
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/v1/user/username", nil)
+	req.Header.Add("Authorization", "Bearer jwt.token.here")
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusOK, w.Code)
@@ -134,6 +140,7 @@ func TestShowUserNotFound(t *testing.T) {
 	router := createServerFixture(puc)
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/v1/user/username", nil)
+	req.Header.Add("Authorization", "Bearer jwt.token.here")
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusNotFound, w.Code)
@@ -151,6 +158,7 @@ func TestUpdateUser(t *testing.T) {
 	router := createServerFixture(puc)
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("PATCH", "/v1/user/username", bytes.NewBuffer(body))
+	req.Header.Add("Authorization", "Bearer jwt.token.here")
 	router.ServeHTTP(w, req)
 
 	assert.NoError(t, err)
@@ -167,6 +175,7 @@ func TestUpdateUserBadRequest(t *testing.T) {
 	router := createServerFixture(puc)
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("PATCH", "/v1/user/username", bytes.NewBuffer(body))
+	req.Header.Add("Authorization", "Bearer jwt.token.here")
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusBadRequest, w.Code)
@@ -182,6 +191,7 @@ func TestUpdateUserNotFound(t *testing.T) {
 	router := createServerFixture(puc)
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("PATCH", "/v1/user/username", bytes.NewBuffer(body))
+	req.Header.Add("Authorization", "Bearer jwt.token.here")
 	router.ServeHTTP(w, req)
 
 	assert.NoError(t, err)
@@ -194,6 +204,7 @@ func TestDeleteUser(t *testing.T) {
 	router := createServerFixture(puc)
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("DELETE", "/v1/user/username", nil)
+	req.Header.Add("Authorization", "Bearer jwt.token.here")
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusNoContent, w.Code)
@@ -205,6 +216,7 @@ func TestDeleteUserNotFound(t *testing.T) {
 	router := createServerFixture(puc)
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("DELETE", "/v1/user/username", nil)
+	req.Header.Add("Authorization", "Bearer jwt.token.here")
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusNotFound, w.Code)
@@ -269,6 +281,7 @@ func TestRefreshToken(t *testing.T) {
 	router := createServerFixture(puc)
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("POST", "/v1/auth/refresh", bytes.NewBuffer(body))
+	req.Header.Add("Authorization", "Bearer jwt.token.here")
 	router.ServeHTTP(w, req)
 
 	assert.NoError(t, err)
@@ -284,6 +297,7 @@ func TestRefreshTokenBadRequest(t *testing.T) {
 	router := createServerFixture(puc)
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("POST", "/v1/auth/refresh", bytes.NewBuffer(body))
+	req.Header.Add("Authorization", "Bearer jwt.token.here")
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusBadRequest, w.Code)
@@ -298,6 +312,7 @@ func TestRefreshTokenInvalid(t *testing.T) {
 	router := createServerFixture(puc)
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("POST", "/v1/auth/refresh", bytes.NewBuffer(body))
+	req.Header.Add("Authorization", "Bearer jwt.token.here")
 	router.ServeHTTP(w, req)
 
 	assert.NoError(t, err)
@@ -309,8 +324,8 @@ func TestLogout(t *testing.T) {
 	puc.On("LoggerOut", mock.Anything).Return(nil)
 	router := createServerFixture(puc)
 	w := httptest.NewRecorder()
-	ctx := context.WithValue(context.Background(), "Authorization", "Bearer jwt.token.here")
-	req, _ := http.NewRequestWithContext(ctx, "POST", "/v1/auth/logout", bytes.NewBuffer([]byte{}))
+	req, _ := http.NewRequest("POST", "/v1/auth/logout", bytes.NewBuffer([]byte{}))
+	req.Header.Add("Authorization", "Bearer jwt.token.here")
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusNoContent, w.Code)
@@ -321,8 +336,8 @@ func TestLogoutWithError(t *testing.T) {
 	puc.On("LoggerOut", mock.Anything).Return(errors.New("error logging out"))
 	router := createServerFixture(puc)
 	w := httptest.NewRecorder()
-	ctx := context.WithValue(context.Background(), "Authorization", "Bearer jwt.token.here")
-	req, _ := http.NewRequestWithContext(ctx, "POST", "/v1/auth/logout", bytes.NewBuffer([]byte{}))
+	req, _ := http.NewRequest("POST", "/v1/auth/logout", bytes.NewBuffer([]byte{}))
+	req.Header.Add("Authorization", "Bearer jwt.token.here")
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusInternalServerError, w.Code)
