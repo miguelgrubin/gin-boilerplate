@@ -2,7 +2,6 @@
 package services
 
 import (
-	"log"
 	"os"
 
 	"github.com/spf13/viper"
@@ -71,7 +70,6 @@ func (c *ConfigServiceViper) ReadConfig() (AppConfig, error) {
 	c.defaultConfig()
 	err := viper.ReadInConfig()
 	if err != nil {
-		log.Println(err)
 		return AppConfig{}, err
 	}
 	c.config = configFactory()

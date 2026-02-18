@@ -1,9 +1,8 @@
 package cmd
 
 import (
-	"log"
-
 	"github.com/miguelgrubin/gin-boilerplate/pkg"
+	"github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule/services"
 	"github.com/spf13/cobra"
 )
 
@@ -18,16 +17,18 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(_ *cobra.Command, _ []string) {
+		logger := services.NewLoggerService(true)
 		app, err := pkg.NewApp()
 		if err != nil {
-			log.Println("Error creating app:")
-			log.Fatal(err)
+			logger.Error("error creating app", services.Err(err))
+			logger.Fatal("failed to create application")
 		}
 		err = app.Seed()
 		if err != nil {
-			log.Println("Error applying seeds:")
-			log.Fatal(err)
+			logger.Error("error applying seeds", services.Err(err))
+			logger.Fatal("seeding failed")
 		}
+		logger.Info("seeding completed successfully")
 	},
 }
 

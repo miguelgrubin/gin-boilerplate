@@ -83,8 +83,8 @@ This document outlines the tasks needed to improve the codebase quality based on
 
 ### 1.6 Add Structured Logging (P2)
 
-- [ ] **Integrate structured logging library**
-  - Choose: zerolog or zap
+- [x] **Integrate structured logging library**
+  - Chose: zap
   - Add logger to `SharedModuleServices`
   - Replace all `log.Println` calls
   - Add request logging middleware with correlation IDs

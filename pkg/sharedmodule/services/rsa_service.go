@@ -6,7 +6,7 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"errors"
-	"log"
+	"fmt"
 	"os"
 )
 
@@ -37,7 +37,6 @@ func NewRSAService(privPath string, pubPath string) *RSAServiceImpl {
 func (r *RSAServiceImpl) GenerateKeyPair() (*rsa.PrivateKey, *rsa.PublicKey) {
 	privkey, err := rsa.GenerateKey(rand.Reader, 4096)
 	if err != nil {
-		log.Println("error generating RSA key pair:", err)
 		return nil, nil
 	}
 	r.privateKey = privkey
@@ -57,20 +56,17 @@ func (r *RSAServiceImpl) Write() error {
 	privPem := exportRsaPrivateKeyAsPemStr(r.privateKey)
 	pubPem, err := exportRsaPublicKeyAsPemStr(r.publicKey)
 	if err != nil {
-		log.Println("error exporting public key as pem string:", err)
-		return err
+		return fmt.Errorf("exporting public key as pem string: %w", err)
 	}
 
 	err = os.WriteFile(r.privatePath, []byte(privPem), 0600)
 	if err != nil {
-		log.Println("error writing private key to file:", err)
-		return err
+		return fmt.Errorf("writing private key to file: %w", err)
 	}
 
 	err = os.WriteFile(r.publicPath, []byte(pubPem), 0600)
 	if err != nil {
-		log.Println("error writing private key to file:", err)
-		return err
+		return fmt.Errorf("writing public key to file: %w", err)
 	}
 
 	return nil
@@ -79,15 +75,13 @@ func (r *RSAServiceImpl) Write() error {
 func (r *RSAServiceImpl) Read() error {
 	privKey, err := readPemPrivFile(r.privatePath)
 	if err != nil {
-		log.Println("error reading private key from file:", err)
-		return err
+		return fmt.Errorf("reading private key from file: %w", err)
 	}
 	r.privateKey = privKey
 
 	pubKey, err := readPemPubFile(r.publicPath)
 	if err != nil {
-		log.Println("error reading public key from file:", err)
-		return err
+		return fmt.Errorf("reading public key from file: %w", err)
 	}
 	r.publicKey = pubKey
 

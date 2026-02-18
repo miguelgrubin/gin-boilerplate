@@ -2,7 +2,7 @@ package services
 
 import (
 	"errors"
-	"log"
+	"fmt"
 	"time"
 
 	jwt "github.com/golang-jwt/jwt/v5"
@@ -51,8 +51,7 @@ func (js *JWTServiceRSA) GenerateTokens(userID string, role string) (string, str
 	})
 	tokenString, err := token.SignedString(js.rsaService.GetPrivateKey())
 	if err != nil {
-		log.Println("error generating token for user:", userID, err)
-		return "", "", err
+		return "", "", fmt.Errorf("generating token for user %s: %w", userID, err)
 	}
 
 	refreshToken := jwt.NewWithClaims(jwt.SigningMethodRS256, jwt.MapClaims{
@@ -64,8 +63,7 @@ func (js *JWTServiceRSA) GenerateTokens(userID string, role string) (string, str
 	})
 	refreshTokenString, err := refreshToken.SignedString(js.rsaService.GetPrivateKey())
 	if err != nil {
-		log.Println("error generating refresh token for user:", userID, err)
-		return "", "", err
+		return "", "", fmt.Errorf("generating refresh token for user %s: %w", userID, err)
 	}
 
 	err = js.redisService.Set(refreshJti, userID, time.Minute*time.Duration(js.config.ExpRefresh))
