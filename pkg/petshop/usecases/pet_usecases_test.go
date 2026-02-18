@@ -20,7 +20,7 @@ func TestPetShowerWhenHasResult(t *testing.T) {
 	pr.On("FindOne", pet.ID).Return(&pet, nil)
 	useCases := usecases.NewPetUseCases(pr)
 
-	result, _ := useCases.Showher(pet.ID)
+	result, _ := useCases.Shower(pet.ID)
 
 	pr.AssertExpectations(t)
 	assert.Equal(t, result, pet)
@@ -38,7 +38,7 @@ func TestPetShowerWhenHasNotResult(t *testing.T) {
 	useCases := usecases.NewPetUseCases(pr)
 	domainErr := &domain.PetNotFound{ID: pet.ID}
 
-	_, err := useCases.Showher(pet.ID)
+	_, err := useCases.Shower(pet.ID)
 	pr.AssertExpectations(t)
 	assert.Equal(t, err, domainErr)
 }

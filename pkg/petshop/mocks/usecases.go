@@ -20,7 +20,7 @@ func (m *MockPetUseCases) Finder(params usecases.PetFinderParams) ([]domain.Pet,
 	return args.Get(0).([]domain.Pet), args.Error(1)
 }
 
-func (m *MockPetUseCases) Showher(id string) (domain.Pet, error) {
+func (m *MockPetUseCases) Shower(id string) (domain.Pet, error) {
 	args := m.Called(id)
 	return args.Get(0).(domain.Pet), args.Error(1)
 }

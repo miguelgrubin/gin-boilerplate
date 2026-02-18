@@ -20,14 +20,14 @@ type PetUpdateRequest struct {
 	Status *string `json:"status"`
 }
 
-func PetReponseFromDomain(p domain.Pet) PetResponse {
+func PetResponseFromDomain(p domain.Pet) PetResponse {
 	return PetResponse{p.ID, p.Name, p.Status, p.CreatedAt.String(), p.UpdatedAt.String()}
 }
 
 func PetResponseListFromDomain(p []domain.Pet) []PetResponse {
 	petList := make([]PetResponse, len(p))
 	for i, v := range p {
-		petList[i] = PetReponseFromDomain(v)
+		petList[i] = PetResponseFromDomain(v)
 	}
 	return petList
 }

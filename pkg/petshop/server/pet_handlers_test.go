@@ -70,7 +70,7 @@ func TestGetPet(t *testing.T) {
 	pet.Name = "Piggie"
 	pet.Status = "Active"
 	puc := new(psMocks.MockPetUseCases)
-	puc.On("Showher", pet.ID).Return(pet, nil)
+	puc.On("Shower", pet.ID).Return(pet, nil)
 	router := createServerFixture(puc)
 	w := httptest.NewRecorder()
 	url := fmt.Sprintf("/v1/pet/%s", pet.ID)
@@ -89,7 +89,7 @@ func TestGetPetWithNotFoundError(t *testing.T) {
 	petID := "random-id"
 
 	puc := new(psMocks.MockPetUseCases)
-	puc.On("Showher", petID).Return(domain.Pet{}, &domain.PetNotFound{ID: petID})
+	puc.On("Shower", petID).Return(domain.Pet{}, &domain.PetNotFound{ID: petID})
 	router := createServerFixture(puc)
 	w := httptest.NewRecorder()
 	url := fmt.Sprintf("/v1/pet/%s", petID)
