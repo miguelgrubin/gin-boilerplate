@@ -60,26 +60,26 @@ This document outlines the tasks needed to improve the codebase quality based on
 
 ### 1.4 Add Domain Validation (P2)
 
-- [ ] **Add email validation to User domain**
+- [x] **Add email validation to User domain**
   - File: `pkg/users/domain/user.go`
   - Create `ValidateEmail(email string) error` function
   - Add validation error types to `pkg/users/domain/errors.go`
 
-- [ ] **Add username validation**
+- [x] **Add username validation**
   - Min/max length
   - Allowed characters
   - Create `InvalidUsername` error type
 
-- [ ] **Add phone validation**
+- [x] **Add phone validation**
   - Basic format validation
   - Create `InvalidPhone` error type
 
 ### 1.5 Fix Unused/Incomplete Code (P2)
 
-- [ ] **Review `NewUser()` and `NewPet()` functions**
+- [x] **Review `NewUser()` and `NewPet()` functions**
   - These create entities without IDs
-  - Either remove them or document their intended use case
-  - Consider if they should be private or have different behavior
+  - Made private and added `HydrateUser` / `HydratePet` functions for persistence hydration
+  - Updated mappers and tests to use proper factory functions
 
 ### 1.6 Add Structured Logging (P2)
 

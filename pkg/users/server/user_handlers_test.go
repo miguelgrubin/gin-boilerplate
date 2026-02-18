@@ -8,7 +8,6 @@ import (
 	"net/http/httptest"
 	"os"
 	"testing"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	sDomain "github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule/domain"
@@ -36,17 +35,14 @@ func createServerFixture(useCases usecases.UserUseCasesInterface) *gin.Engine {
 }
 
 func mockUser() domain.User {
-	user := domain.NewUser()
-	user.Username = "username"
-	user.FirstName = "User Name"
-	user.LastName = "Last Name"
-	user.Email = "user@example.com"
-	user.PasswordHash = "securepassword"
-	user.Phone = "1234567890"
-	user.Status = "active"
-	user.Role = "user"
-	user.CreatedAt = time.Now()
-	user.UpdatedAt = time.Now()
+	user := domain.CreateUser(domain.CreateUserParams{
+		Username:  "username",
+		FirstName: "User Name",
+		LastName:  "Last Name",
+		Email:     "user@example.com",
+		Password:  "securepassword",
+		Phone:     "1234567890",
+	})
 	return user
 }
 

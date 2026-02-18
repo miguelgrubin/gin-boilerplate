@@ -426,12 +426,12 @@ func (ts *UserUsecasesTestSuite) TestLoggerOut() {
 }
 
 func mockedUser() domain.User {
-	user := domain.NewUser()
-	user.ID = "user-id"
-	user.Username = "mm"
-	user.FirstName = "Martín"
-	user.LastName = "Martínez"
-	user.Email = "mm@example.com"
+	user := domain.CreateUser(domain.CreateUserParams{
+		Username:  "mm",
+		FirstName: "Martín",
+		LastName:  "Martínez",
+		Email:     "mm@example.com",
+	})
 	return user
 }
 

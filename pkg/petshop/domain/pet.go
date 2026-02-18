@@ -67,9 +67,29 @@ func (p *Pet) Update(payload UpdatePetParams) {
 	p.eventRegistry.AddEvent(PetUpdated)
 }
 
-func NewPet() Pet {
-	pet := Pet{
+// newPet creates a Pet with an initialized event registry.
+// This is intended for internal use when hydrating entities from persistence.
+// For creating new pets, use CreatePet instead.
+func newPet() Pet {
+	return Pet{
 		eventRegistry: sd.NewEventRegistry(),
 	}
+}
+
+// HydratePet creates a Pet from persistence data.
+// This should only be used by repository mappers to reconstruct entities from storage.
+// For creating new pets in the application, use CreatePet instead.
+func HydratePet(
+	id, name, status string,
+	createdAt, updatedAt time.Time,
+	deletedAt *time.Time,
+) Pet {
+	pet := newPet()
+	pet.ID = id
+	pet.Name = name
+	pet.Status = status
+	pet.CreatedAt = createdAt
+	pet.UpdatedAt = updatedAt
+	pet.DeletedAt = deletedAt
 	return pet
 }
