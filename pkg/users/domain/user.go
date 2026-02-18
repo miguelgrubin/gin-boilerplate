@@ -12,6 +12,18 @@ const (
 	UserCreated = "user.created"
 )
 
+// User status constants
+const (
+	StatusActive   = "active"
+	StatusInactive = "inactive"
+)
+
+// User role constants
+const (
+	RoleUser  = "user"
+	RoleAdmin = "admin"
+)
+
 type User struct {
 	ID            string
 	Username      string
@@ -63,8 +75,8 @@ func CreateUser(payload CreateUserParams) User {
 		LastName:      payload.LastName,
 		Email:         payload.Email,
 		Phone:         payload.Phone,
-		Status:        "active",
-		Role:          "user",
+		Status:        StatusActive,
+		Role:          RoleUser,
 		UpdatedAt:     time.Now(),
 		CreatedAt:     time.Now(),
 		DeletedAt:     nil,

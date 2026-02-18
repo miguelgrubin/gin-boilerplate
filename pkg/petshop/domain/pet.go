@@ -12,6 +12,13 @@ const (
 	PetCreated = "pet.created"
 )
 
+// Pet status constants
+const (
+	PetStatusAvailable = "available"
+	PetStatusPending   = "pending"
+	PetStatusSold      = "sold"
+)
+
 type Pet struct {
 	ID            string
 	Name          string

@@ -35,7 +35,7 @@ This document outlines the tasks needed to improve the codebase quality based on
 
 ### 1.2 Add Constants for Magic Strings (P1)
 
-- [ ] **Create status constants in user domain**
+- [x] **Create status constants in user domain**
   - File: `pkg/users/domain/user.go`
   - Add constants:
     ```go
@@ -48,13 +48,13 @@ This document outlines the tasks needed to improve the codebase quality based on
     ```
   - Update `CreateUser` function to use constants
 
-- [ ] **Create status constants in pet domain**
+- [x] **Create status constants in pet domain**
   - File: `pkg/petshop/domain/pet.go`
   - Add constants for pet statuses (available, pending, sold, etc.)
 
 ### 1.3 Remove Debug Logging from Business Logic (P1)
 
-- [ ] **Remove log.Println from user usecases**
+- [x] **Remove log.Println from user usecases**
   - File: `pkg/users/usecases/user_usecases.go:107,112`
   - Remove or replace with structured logger passed via DI
 
