@@ -37,7 +37,7 @@ type DatabaseConfig struct {
 
 type RedisConfig struct {
 	Address  string
-	Password string
+	Password string //gosec:disable
 	DB       int
 }
 

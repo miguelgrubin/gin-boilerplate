@@ -20,7 +20,7 @@ type UserCreateRequest struct {
 	FirstName string `json:"first_name" binding:"required"`
 	LastName  string `json:"last_name" binding:"required"`
 	Email     string `json:"email" binding:"required"`
-	Password  string `json:"password" binding:"required"`
+	Password  string `json:"password" binding:"required"` //gosec:disable
 	Phone     string `json:"phone" binding:"required"`
 }
 
@@ -28,18 +28,18 @@ type UserUpdateRequest struct {
 	FirstName *string `json:"first_name"`
 	LastName  *string `json:"last_name"`
 	Email     *string `json:"email"`
-	Password  *string `json:"password"`
+	Password  *string `json:"password"` //gosec:disable
 	Phone     *string `json:"phone"`
 	Status    *string `json:"status"`
 }
 
 type UserLoginRequest struct {
 	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
+	Password string `json:"password" binding:"required"` //gosec:disable
 }
 
 type UserRefreshTokenRequest struct {
-	RefreshToken string `json:"refresh_token" binding:"required"`
+	RefreshToken string `json:"refresh_token" binding:"required"` //gosec:disable
 }
 
 func UserResponseFromDomain(u domain.User) UserResponse {

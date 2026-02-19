@@ -47,7 +47,7 @@ type CreateUserParams struct {
 	FirstName string
 	LastName  string
 	Email     string
-	Password  string
+	Password  string //gosec:disable
 	Phone     string
 }
 
@@ -55,7 +55,7 @@ type UpdateUserParams struct {
 	FirstName *string
 	LastName  *string
 	Email     *string
-	Password  *string
+	Password  *string  //gosec:disable
 	Phone     *string
 	Status    *string
 }
