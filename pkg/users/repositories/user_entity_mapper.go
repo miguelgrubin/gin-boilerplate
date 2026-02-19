@@ -5,19 +5,20 @@ import (
 )
 
 func UserEntityToDomain(ue UserEntity) domain.User {
-	user := domain.NewUser()
-	user.ID = ue.ID
-	user.Username = ue.Username
-	user.FirstName = ue.FirstName
-	user.LastName = ue.LastName
-	user.Email = ue.Email
-	user.PasswordHash = ue.PasswordHash
-	user.Status = ue.Status
-	user.Role = ue.Role
-	user.CreatedAt = ue.CreatedAt
-	user.UpdatedAt = ue.UpdatedAt
-	user.DeletedAt = ue.DeletedAt
-	return user
+	return domain.HydrateUser(
+		ue.ID,
+		ue.Username,
+		ue.FirstName,
+		ue.LastName,
+		ue.Email,
+		ue.Phone,
+		ue.PasswordHash,
+		ue.Status,
+		ue.Role,
+		ue.CreatedAt,
+		ue.UpdatedAt,
+		ue.DeletedAt,
+	)
 }
 
 func UserEntityFromDomain(u domain.User) UserEntity {
@@ -27,6 +28,7 @@ func UserEntityFromDomain(u domain.User) UserEntity {
 		FirstName:    u.FirstName,
 		LastName:     u.LastName,
 		Email:        u.Email,
+		Phone:        u.Phone,
 		PasswordHash: u.PasswordHash,
 		Status:       u.Status,
 		Role:         u.Role,

@@ -2,8 +2,6 @@
 package usecases
 
 import (
-	"log"
-
 	sd "github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule/domain"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule/services"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/users/domain"
@@ -23,7 +21,7 @@ type UserCreatorParams struct {
 	FirstName string
 	LastName  string
 	Email     string
-	Password  string
+	Password  string //gosec:disable
 	Phone     string
 }
 
@@ -31,7 +29,7 @@ type UserUpdatersParams struct {
 	FirstName *string
 	LastName  *string
 	Email     *string
-	Password  *string
+	Password  *string  //gosec:disable
 	Phone     *string
 	Status    *string
 }
@@ -104,12 +102,10 @@ func (p *UserUseCases) Deleter(username string) error {
 func (p *UserUseCases) LoggerIn(username string, password string) (string, string, error) {
 	user, err := p.ur.FindOneByUsername(username)
 	if err != nil {
-		log.Println("username not found")
 		return "", "", &domain.InvalidLogin{}
 	}
 
 	if !p.hs.Compare(user.PasswordHash, password) {
-		log.Println("invalid password")
 		return "", "", &domain.InvalidLogin{}
 	}
 

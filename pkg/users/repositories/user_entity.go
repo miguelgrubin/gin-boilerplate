@@ -1,4 +1,4 @@
-// Package repositories provides specific way to store petshop data into databases.
+// Package repositories provides specific way to store users data into databases.
 package repositories
 
 import "time"
@@ -9,6 +9,7 @@ type UserEntity struct {
 	FirstName    string     `gorm:"size:100;not null;"`
 	LastName     string     `gorm:"size:100;not null;"`
 	Email        string     `gorm:"size:100;not null;"`
+	Phone        string     `gorm:"size:20;"`
 	PasswordHash string     `gorm:"size:255;not null;"`
 	Status       string     `gorm:"size:100;not null;"`
 	Role         string     `gorm:"size:100;not null;"`

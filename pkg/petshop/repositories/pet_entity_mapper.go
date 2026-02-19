@@ -5,14 +5,14 @@ import (
 )
 
 func PetEntityToDomain(pe PetEntity) domain.Pet {
-	return domain.Pet{
-		ID:        pe.ID,
-		Name:      pe.Name,
-		Status:    pe.Status,
-		CreatedAt: pe.CreatedAt,
-		UpdatedAt: pe.UpdatedAt,
-		DeletedAt: pe.DeletedAt,
-	}
+	return domain.HydratePet(
+		pe.ID,
+		pe.Name,
+		pe.Status,
+		pe.CreatedAt,
+		pe.UpdatedAt,
+		pe.DeletedAt,
+	)
 }
 
 func PetEntityFromDomain(p domain.Pet) PetEntity {

@@ -1,11 +1,11 @@
 package pkg
 
 import (
-	"log"
-
 	"github.com/gin-gonic/gin"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule"
+	"github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule/middlewares"
+	"github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule/services"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/users"
 )
 
@@ -32,7 +32,7 @@ func NewApp() (*App, error) {
 func (a *App) Migrate() error {
 	err := a.SharedServices.DBService.Connect()
 	if err != nil {
-		log.Println("Error connecting to database:", err)
+		a.SharedServices.LoggerService.Error("error connecting to database", services.Err(err))
 		return err
 	}
 	defer a.SharedServices.DBService.Close()
@@ -67,11 +67,13 @@ func (a *App) GenerateKeys() error {
 
 func (a *App) RunServer() {
 	address := a.SharedServices.ConfigService.GetConfig().Server.Address
+	logger := a.SharedServices.LoggerService
 
 	defer a.SharedServices.DBService.Close()
+	defer func() { _ = logger.Sync() }()
 
 	r := gin.New()
-	r.Use(gin.Logger())
+	r.Use(middlewares.RequestLogger(logger))
 	r.Use(gin.Recovery())
 	r.GET("/health", func(c *gin.Context) {
 		c.String(200, "Health check!")
@@ -81,8 +83,9 @@ func (a *App) RunServer() {
 	a.PetShopModule.SetupRoutes(v1)
 	a.UsersModule.SetupRoutes(v1)
 
+	logger.Info("starting server", services.String("address", address))
 	err := r.Run(address)
 	if err != nil {
-		log.Print(err)
+		logger.Error("server error", services.Err(err))
 	}
 }

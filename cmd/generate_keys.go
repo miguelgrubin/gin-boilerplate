@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"log"
-
 	"github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule/services"
 	"github.com/spf13/cobra"
 )
@@ -18,10 +16,11 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(_ *cobra.Command, _ []string) {
+		logger := services.NewLoggerService(true)
 		configService := services.NewConfigService()
 		_, err := configService.ReadConfig()
 		if err != nil {
-			log.Println("Error reading config", err)
+			logger.Error("error reading config", services.Err(err))
 			return
 		}
 		config := configService.GetConfig()
@@ -29,9 +28,10 @@ to quickly create a Cobra application.`,
 		rsaService.GenerateKeyPair()
 		err = rsaService.Write()
 		if err != nil {
-			log.Println("Error generating keys:")
-			log.Fatal(err)
+			logger.Error("error generating keys", services.Err(err))
+			logger.Fatal("key generation failed")
 		}
+		logger.Info("keys generated successfully")
 	},
 }
 

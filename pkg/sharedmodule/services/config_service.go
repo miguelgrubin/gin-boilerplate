@@ -2,7 +2,6 @@
 package services
 
 import (
-	"log"
 	"os"
 
 	"github.com/spf13/viper"
@@ -38,7 +37,7 @@ type DatabaseConfig struct {
 
 type RedisConfig struct {
 	Address  string
-	Password string
+	Password string //gosec:disable
 	DB       int
 }
 
@@ -71,7 +70,6 @@ func (c *ConfigServiceViper) ReadConfig() (AppConfig, error) {
 	c.defaultConfig()
 	err := viper.ReadInConfig()
 	if err != nil {
-		log.Println(err)
 		return AppConfig{}, err
 	}
 	c.config = configFactory()

@@ -2,8 +2,6 @@
 package cmd
 
 import (
-	"log"
-
 	"github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule/services"
 	"github.com/spf13/cobra"
 )
@@ -14,11 +12,14 @@ var createConfigCmd = &cobra.Command{
 	Short: "Creates a default config file in the current folder",
 	Long:  `Creates a default config file in the current folder`,
 	Run: func(_ *cobra.Command, _ []string) {
+		logger := services.NewLoggerService(true)
 		configService := services.NewConfigService()
 		err := configService.WriteConfig()
 		if err != nil {
-			log.Println("Error writing config", err)
+			logger.Error("error writing config", services.Err(err))
+			return
 		}
+		logger.Info("config file created successfully")
 	},
 }
 

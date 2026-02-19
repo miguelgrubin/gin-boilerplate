@@ -14,12 +14,14 @@ func TestNewPet(t *testing.T) {
 	})
 	assert.Equal(t, pet.Name, "Piggie")
 	assert.Equal(t, pet.Status, "Active")
+	assert.NotEmpty(t, pet.ID)
 }
 
 func TestPetUpdateName(t *testing.T) {
-	pet := domain.NewPet()
-	pet.Name = "Piggie"
-	pet.Status = "Active"
+	pet := domain.CreatePet(domain.CreatePetParams{
+		Name:   "Piggie",
+		Status: "Active",
+	})
 	newName := "Peggie"
 	pet.Update(domain.UpdatePetParams{
 		Name: &newName,
@@ -29,9 +31,10 @@ func TestPetUpdateName(t *testing.T) {
 }
 
 func TestPetUpdateStatus(t *testing.T) {
-	pet := domain.NewPet()
-	pet.Name = "Piggie"
-	pet.Status = "Active"
+	pet := domain.CreatePet(domain.CreatePetParams{
+		Name:   "Piggie",
+		Status: "Active",
+	})
 	newStatus := "Sleeping"
 	pet.Update(domain.UpdatePetParams{
 		Status: &newStatus,

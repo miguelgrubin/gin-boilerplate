@@ -27,7 +27,7 @@ type PetUpdatersParams struct {
 type PetUseCasesInterface interface {
 	Creator(PetCreatorParams) (domain.Pet, error)
 	Finder(PetFinderParams) ([]domain.Pet, error)
-	Showher(string) (domain.Pet, error)
+	Shower(string) (domain.Pet, error)
 	Updater(string, PetUpdatersParams) (domain.Pet, error)
 	Deleter(string) error
 }
@@ -49,7 +49,7 @@ func (p *PetUseCases) Finder(_ PetFinderParams) ([]domain.Pet, error) {
 	return p.pr.FindAll()
 }
 
-func (p *PetUseCases) Showher(petID string) (domain.Pet, error) {
+func (p *PetUseCases) Shower(petID string) (domain.Pet, error) {
 	pet, err := p.pr.FindOne(petID)
 	if err != nil {
 		return domain.Pet{}, &domain.PetNotFound{ID: petID}

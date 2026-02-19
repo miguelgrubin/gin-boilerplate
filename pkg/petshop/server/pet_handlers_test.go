@@ -31,11 +31,16 @@ func createServerFixture(useCases usecases.PetUseCasesInterface) *gin.Engine {
 	return router
 }
 
+func createTestPet(id, name, status string) domain.Pet {
+	pet := domain.CreatePet(domain.CreatePetParams{
+		Name:   name,
+		Status: status,
+	})
+	return domain.HydratePet(id, pet.Name, pet.Status, pet.CreatedAt, pet.UpdatedAt, pet.DeletedAt)
+}
+
 func TestGetPets(t *testing.T) {
-	pet := domain.NewPet()
-	pet.ID = "pet-id"
-	pet.Name = "Piggie"
-	pet.Status = "Active"
+	pet := createTestPet("pet-id", "Piggie", "Active")
 	pets := []domain.Pet{pet}
 	puc := new(psMocks.MockPetUseCases)
 	puc.On("Finder", mock.AnythingOfType("usecases.PetFinderParams")).Return(pets, nil)
@@ -65,12 +70,9 @@ func TestGetPetsWithRandomError(t *testing.T) {
 }
 
 func TestGetPet(t *testing.T) {
-	pet := domain.NewPet()
-	pet.ID = "pet-id"
-	pet.Name = "Piggie"
-	pet.Status = "Active"
+	pet := createTestPet("pet-id", "Piggie", "Active")
 	puc := new(psMocks.MockPetUseCases)
-	puc.On("Showher", pet.ID).Return(pet, nil)
+	puc.On("Shower", pet.ID).Return(pet, nil)
 	router := createServerFixture(puc)
 	w := httptest.NewRecorder()
 	url := fmt.Sprintf("/v1/pet/%s", pet.ID)
@@ -89,7 +91,7 @@ func TestGetPetWithNotFoundError(t *testing.T) {
 	petID := "random-id"
 
 	puc := new(psMocks.MockPetUseCases)
-	puc.On("Showher", petID).Return(domain.Pet{}, &domain.PetNotFound{ID: petID})
+	puc.On("Shower", petID).Return(domain.Pet{}, &domain.PetNotFound{ID: petID})
 	router := createServerFixture(puc)
 	w := httptest.NewRecorder()
 	url := fmt.Sprintf("/v1/pet/%s", petID)
@@ -159,10 +161,7 @@ func TestPostPetWithRequestError(t *testing.T) {
 }
 
 func TestPatchPet(t *testing.T) {
-	pet := domain.NewPet()
-	pet.ID = "pet-id"
-	pet.Name = "Pet Name"
-	pet.Status = "Active"
+	pet := createTestPet("pet-id", "Pet Name", "Active")
 	validPayload := "{\"status\": \"sleeping\"}"
 
 	puc := new(psMocks.MockPetUseCases)
@@ -177,10 +176,7 @@ func TestPatchPet(t *testing.T) {
 }
 
 func TestPatchPetWithNotFoundError(t *testing.T) {
-	pet := domain.NewPet()
-	pet.ID = "pet-id"
-	pet.Name = "Pet Name"
-	pet.Status = "Active"
+	pet := createTestPet("pet-id", "Pet Name", "Active")
 	validPayload := "{\"status\": \"sleeping\"}"
 
 	puc := new(psMocks.MockPetUseCases)

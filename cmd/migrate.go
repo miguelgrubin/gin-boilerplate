@@ -1,9 +1,8 @@
 package cmd
 
 import (
-	"log"
-
 	"github.com/miguelgrubin/gin-boilerplate/pkg"
+	"github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule/services"
 	"github.com/spf13/cobra"
 )
 
@@ -14,16 +13,18 @@ var migrateCmd = &cobra.Command{
 	Long: `Migrates the database to the latest version. This command applies all pending migrations
 to ensure the database schema is up to date.`,
 	Run: func(_ *cobra.Command, _ []string) {
+		logger := services.NewLoggerService(true)
 		app, err := pkg.NewApp()
 		if err != nil {
-			log.Println("Error creating app:")
-			log.Fatal(err)
+			logger.Error("error creating app", services.Err(err))
+			logger.Fatal("failed to create application")
 		}
 		err = app.Migrate()
 		if err != nil {
-			log.Println("Error applying migration:")
-			log.Fatal(err)
+			logger.Error("error applying migration", services.Err(err))
+			logger.Fatal("migration failed")
 		}
+		logger.Info("migration completed successfully")
 	},
 }
 

@@ -34,7 +34,7 @@ func (ph *PetHandlers) PetCreateHandler(c *gin.Context) {
 		handleError(c, err)
 		return
 	}
-	c.JSON(http.StatusCreated, PetReponseFromDomain(pet))
+	c.JSON(http.StatusCreated, PetResponseFromDomain(pet))
 }
 
 func (ph *PetHandlers) PetListHandler(c *gin.Context) {
@@ -49,13 +49,13 @@ func (ph *PetHandlers) PetListHandler(c *gin.Context) {
 
 func (ph *PetHandlers) PetShowHandler(c *gin.Context) {
 	petID := c.Param("id")
-	pet, err := ph.usecase.Showher(petID)
+	pet, err := ph.usecase.Shower(petID)
 
 	if err != nil {
 		handleError(c, err)
 		return
 	}
-	c.JSON(http.StatusOK, PetReponseFromDomain(pet))
+	c.JSON(http.StatusOK, PetResponseFromDomain(pet))
 }
 
 func (ph *PetHandlers) PetUpdateHandler(c *gin.Context) {
@@ -73,7 +73,7 @@ func (ph *PetHandlers) PetUpdateHandler(c *gin.Context) {
 		handleError(c, err)
 		return
 	}
-	c.JSON(http.StatusOK, PetReponseFromDomain(pet))
+	c.JSON(http.StatusOK, PetResponseFromDomain(pet))
 }
 
 func (ph *PetHandlers) PetDeleteHandler(c *gin.Context) {
