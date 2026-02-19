@@ -149,88 +149,27 @@ This document outlines the tasks needed to improve the codebase quality based on
 - [ ] **Future: Add external event bus implementation**
   - Redis Pub/Sub, RabbitMQ, or Kafka adapter
 
-### 2.4 Add Transaction Management (P2)
-
-- [ ] **Create Unit of Work pattern**
-  - File: `pkg/sharedmodule/services/unit_of_work.go`
-  - Define interface for transaction management:
-    ```go
-    type UnitOfWork interface {
-        Begin() error
-        Commit() error
-        Rollback() error
-    }
-    ```
-
-- [ ] **Update repositories to support transactions**
-  - Accept `*gorm.DB` or transaction context
-  - Allow use cases to coordinate multiple repository operations
-
-### 2.5 Add Context Support (P2)
-
-- [ ] **Add context.Context to all interfaces**
-  - Repository methods: `FindOne(ctx context.Context, id string) (*domain.User, error)`
-  - Use case methods: `Creator(ctx context.Context, params UserCreatorParams) (domain.User, error)`
-  - Service methods: Include context for cancellation and tracing
-
-- [ ] **Propagate context from handlers**
-  - Use `c.Request.Context()` in Gin handlers
-  - Pass down through all layers
-
-### 2.6 Refactor SharedModuleServices (P3)
-
-- [ ] **Consider dependency injection container**
-  - Evaluate: wire, fx, or dig
-  - OR keep manual DI but improve organization
-
-- [ ] **Split services by concern**
-  - `InfrastructureServices`: DB, Redis, Config
-  - `SecurityServices`: JWT, Hash, RSA
-  - Allows modules to depend only on what they need
-
 ---
 
 ## 3. Self-Similarity Improvements
 
 ### 3.1 Standardize Mock File Names (P1)
 
-- [ ] **Rename petshop mock files to match users pattern**
+- [x] **Rename petshop mock files to match users pattern**
   - `pkg/petshop/mocks/repositories.go` → `pkg/petshop/mocks/pet_repository.go`
   - `pkg/petshop/mocks/usecases.go` → `pkg/petshop/mocks/pet_usecases.go`
+  - Applied entity-prefixed naming convention consistently
 
-- [ ] **OR rename users to match petshop**
-  - Choose one convention and apply consistently
-  - Recommended: entity-prefixed names (`user_repository.go`, `pet_repository.go`)
-
-### 3.2 Create Module Template/Generator (P2)
-
-- [ ] **Document module structure**
-  - Create `docs/module-structure.md` with required files and patterns
-
-- [ ] **Create code generator command**
-  - Add `cmd/generate_module.go`
-  - Generate boilerplate for new modules:
-    - factory.go
-    - domain/entity.go
-    - domain/errors.go
-    - usecases/entity_usecases.go
-    - repositories/entity_repository.go
-    - repositories/entity_entity.go
-    - repositories/entity_entity_mapper.go
-    - server/entity_handlers.go
-    - server/entity_dtos.go
-    - server/error_handler.go
-    - mocks/entity_repository.go
-    - mocks/entity_usecases.go
 
 ### 3.3 Standardize Error Handler Pattern (P2)
 
-- [ ] **Create shared error handler base**
+- [x] **Create shared error handler base**
   - File: `pkg/sharedmodule/server/error_handler.go`
-  - Define common HTTP error mapping
-  - Module error handlers extend/compose with base
+  - Define common HTTP error mapping with `ErrorClassifier` pattern
+  - Module error handlers extend/compose with base via `HandleErrorWithClassifier`
+  - Added helper functions: `SendError`, `SendNotFound`, `SendUnauthorized`, `SendBadRequest`, `SendInternalError`
 
-- [ ] **Add error response structure**
+- [x] **Add error response structure**
   - Consistent JSON error response format:
     ```go
     type ErrorResponse struct {
@@ -242,9 +181,12 @@ This document outlines the tasks needed to improve the codebase quality based on
 
 ### 3.4 Standardize DTO Patterns (P2)
 
-- [ ] **Create base DTO types**
+- [x] **Create base DTO types**
   - File: `pkg/sharedmodule/server/dtos.go`
-  - Common patterns for pagination, timestamps, etc.
+  - Common patterns for pagination (`PaginationRequest`, `PaginationResponse`)
+  - Timestamps (`TimestampsResponse`)
+  - Generic list wrapper (`ListResponse[T]`)
+  - ID request (`IDRequest`)
 
 - [ ] **Add DTO validation tags**
   - Use `binding:"required"` consistently
@@ -275,12 +217,6 @@ This document outlines the tasks needed to improve the codebase quality based on
   - File: `pkg/testutil/database.go`
   - Common setup/teardown for integration tests
 
-### 4.3 Add Benchmark Tests (P3)
-
-- [ ] **Add benchmarks for critical paths**
-  - Password hashing
-  - JWT generation/validation
-  - Database queries
 
 ---
 
@@ -320,7 +256,6 @@ This document outlines the tasks needed to improve the codebase quality based on
 
 ### Phase 2: Core Improvements (3-5 days)
 1. Add domain validation (1.4)
-2. Add context support (2.5)
 3. Standardize error handlers (3.3)
 4. Add test helpers (4.2)
 
@@ -328,13 +263,10 @@ This document outlines the tasks needed to improve the codebase quality based on
 1. Separate authentication module (2.1)
 2. Add ports layer (2.2)
 3. Implement event publishing (2.3)
-4. Add transaction management (2.4)
 
 ### Phase 4: Future Enhancements
 1. Structured logging (1.6)
-2. Module generator (3.2)
 3. ADRs and documentation (5.x)
-4. Benchmarks (4.3)
 
 ---
 

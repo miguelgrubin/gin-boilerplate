@@ -6,15 +6,19 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/miguelgrubin/gin-boilerplate/pkg/petshop/domain"
+	sharedServer "github.com/miguelgrubin/gin-boilerplate/pkg/sharedmodule/server"
 )
 
-func handleError(c *gin.Context, err error) {
+// petshopErrorClassifier classifies petshop-domain specific errors.
+func petshopErrorClassifier(err error) (int, string) {
 	switch err.(type) {
-	default:
-		c.JSON(http.StatusInternalServerError, err.Error())
-		return
 	case *domain.PetNotFound:
-		c.JSON(http.StatusNotFound, err.Error())
-		return
+		return http.StatusNotFound, "PET_NOT_FOUND"
 	}
+	return 0, ""
+}
+
+// handleError handles errors for the petshop module using the shared error handler.
+func handleError(c *gin.Context, err error) {
+	sharedServer.HandleErrorWithClassifier(c, err, petshopErrorClassifier)
 }
