@@ -8,10 +8,6 @@
 | GET    | /v1/pet/{petId}           | petshop |
 | PATCH  | /v1/pet/{petId}           | petshop |
 | DELETE | /v1/pet/{petId}           | petshop |
-| GET    | /v1/store/inventory       | petshop |
-| POST   | /v1/store/order           | petshop |
-| GET    | /v1/store/order/{orderId} | petshop |
-| DELETE | /v1/store/order/{orderId} | petshop |
 | POST   | /v1/users                 | users   |
 | GET    | /v1/user/{username}       | users   |
 | PATCH  | /v1/user/{username}       | users   |
